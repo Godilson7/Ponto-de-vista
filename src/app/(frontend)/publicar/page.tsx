@@ -75,7 +75,7 @@ export default function PublicarPage() {
       </Section>
 
       {/* Formulário de interesse */}
-      <Section muted id="formulario">
+      <Section muted id="contacto">
         <div className="grid gap-12 md:grid-cols-12">
           <div className="md:col-span-4">
             <SectionHeading

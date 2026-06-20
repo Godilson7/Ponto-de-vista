@@ -6,6 +6,7 @@ import { Field, Input, Textarea, Select } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
 import { ImageUpload } from '@/components/forms/image-upload'
 import { saveBook } from '../../actions'
+import type { AdminBookRow } from '../../types'
 
 export const dynamic = 'force-dynamic'
 
@@ -16,7 +17,7 @@ export default async function AdminLivroForm({ params }: Params) {
   const isNew = id === 'novo'
   const supabase = await createClient()
 
-  let b: Record<string, any> = {}
+  let b: AdminBookRow = {}
   if (!isNew) {
     const { data } = await supabase.from('books').select('*').eq('id', id).maybeSingle()
     b = data ?? {}

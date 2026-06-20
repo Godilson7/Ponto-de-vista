@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Card } from '@/components/ui/card'
 import { Tag } from '@/components/ui/tag'
 import { deletePost } from '../actions'
+import type { AdminPostListRow } from '../types'
 
 export const dynamic = 'force-dynamic'
 
@@ -31,7 +32,7 @@ export default async function AdminArtigos() {
       </div>
 
       <Card className="divide-y divide-border">
-        {(posts ?? []).map((p: any) => {
+        {(posts ?? []).map((p: AdminPostListRow) => {
           const cat = Array.isArray(p.categoria) ? p.categoria[0] : p.categoria
           return (
             <div key={p.id} className="flex flex-wrap items-center gap-3 p-4">

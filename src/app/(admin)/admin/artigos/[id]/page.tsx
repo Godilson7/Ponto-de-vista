@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Field, Input, Textarea, Select } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
 import { savePost } from '../../actions'
+import type { AdminPostRow } from '../../types'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,7 +16,7 @@ export default async function AdminArtigoForm({ params }: Params) {
   const isNew = id === 'novo'
   const supabase = await createClient()
 
-  let p: Record<string, any> = {}
+  let p: AdminPostRow = {}
   if (!isNew) {
     const { data } = await supabase.from('blog_posts').select('*').eq('id', id).maybeSingle()
     p = data ?? {}

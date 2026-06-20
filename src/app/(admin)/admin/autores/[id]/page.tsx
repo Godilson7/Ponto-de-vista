@@ -6,6 +6,7 @@ import { Field, Input, Textarea, Select } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
 import { ImageUpload } from '@/components/forms/image-upload'
 import { saveAuthor } from '../../actions'
+import type { AdminAuthorRow } from '../../types'
 
 export const dynamic = 'force-dynamic'
 
@@ -15,7 +16,7 @@ export default async function AdminAutorForm({ params }: Params) {
   const { id } = await params
   const isNew = id === 'novo'
 
-  let a: Record<string, any> = {}
+  let a: AdminAuthorRow = {}
   if (!isNew) {
     const supabase = await createClient()
     const { data } = await supabase.from('authors').select('*').eq('id', id).maybeSingle()

@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server'
 import { Card } from '@/components/ui/card'
 import { Tag } from '@/components/ui/tag'
 import { deleteBook } from '../actions'
+import type { AdminBookListRow } from '../types'
 
 export const dynamic = 'force-dynamic'
 
@@ -31,7 +32,7 @@ export default async function AdminLivros() {
       </div>
 
       <Card className="divide-y divide-border">
-        {(livros ?? []).map((b: any) => {
+        {(livros ?? []).map((b: AdminBookListRow) => {
           const autor = Array.isArray(b.autor) ? b.autor[0] : b.autor
           return (
             <div key={b.id} className="flex flex-wrap items-center gap-3 p-4">
