@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ *
+ * Direção 4 — "A Academia". Tokens em canais RGB (para opacidade e
+ * tema). Espelhados no tailwind.config.ts via rgb(var(--token) / α).
+ * ------------------------------------------------------------------ */
+:root {
+  --paper: 239 234 224; /* #EFEAE0 fundo (papel quente) */
+  --paper-card: 246 242 234; /* #F6F2EA superfícies */
+  --ink: 21 20 15; /* #15140F texto */
+  --ink-soft: 58 58 46; /* #3A3A2E texto secundário */
+  --emerald: 30 77 58; /* #1E4D3A acento de marca */
+  --emerald-deep: 22 59 44; /* #163B2C hover */
+  --gold: 176 147 74; /* #B0934A detalhe */
+  --muted: 111 104 87; /* #6F6857 labels/metadados */
+  --border: 21 20 15; /* usado a 0.14 de alpha */
+}
+
+.dark {
+  --paper: 17 16 13; /* near-black quente */
+  --paper-card: 30 28 22; /* superfície elevada */
+  --ink: 240 235 225; /* texto claro */
+  --ink-soft: 200 194 180;
+  --emerald: 104 178 142; /* esmeralda mais clara p/ contraste */
+  --emerald-deep: 86 160 124;
+  --gold: 200 171 104;
+  --muted: 154 147 130;
+  --border: 240 235 225; /* claro, a 0.14 */
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-paper font-sans text-body text-ink antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings:
+      'cv11',
+      'ss01',
+      'calt',
+      'liga';
+    font-optical-sizing: auto;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  /* Títulos em Fraunces (voz editorial) */
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-serif font-medium text-ink;
+    text-wrap: balance;
+    font-optical-sizing: auto;
+  }
+
+  ::selection {
+    background: rgb(var(--emerald));
+    color: rgb(var(--paper));
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--emerald));
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  a {
+    @apply transition-colors;
+  }
+}
+
+@layer components {
+  /* Label institucional: maiúsculas espaçadas */
+  .label {
+    @apply font-sans text-label font-medium uppercase text-muted;
+  }
+
+  /* Régua / filete dourado */
+  .gold-rule {
+    @apply block h-px w-16 border-0 bg-gold;
+  }
+  .gold-rule-full {
+    @apply block h-px w-full border-0;
+    background: linear-gradient(to right, rgb(var(--gold)), rgb(var(--gold) / 0.2));
+  }
+
+  /* Citação editorial */
+  .pull-quote {
+    @apply font-serif text-2xl italic leading-snug text-ink-soft md:text-3xl;
+  }
+
+  .container-editorial {
+    @apply mx-auto w-full max-w-content px-6 lg:px-8;
+  }
+
+  /* Corpo de texto longo / descrições — serifa editorial (Fraunces) */
+  .prose-editorial {
+    @apply max-w-prose font-serif text-[1.0625rem] leading-[1.75] text-ink-soft;
+  }
+  .prose-editorial > * + * {
+    @apply mt-4;
+  }
+  .prose-editorial h2 {
+    @apply mt-10 font-serif text-h3 font-medium tracking-tightish text-ink;
+  }
+  .prose-editorial h3 {
+    @apply mt-8 font-serif text-h3 font-medium tracking-tightish text-ink;
+  }
+  .prose-editorial h4 {
+    @apply mt-6 text-lg font-semibold text-ink;
+  }
+  .prose-editorial ul {
+    @apply list-disc space-y-2 pl-6;
+  }
+  .prose-editorial ol {
+    @apply list-decimal space-y-2 pl-6;
+  }
+  .prose-editorial a {
+    @apply text-emerald underline underline-offset-4 hover:text-emerald-deep;
+  }
+  .prose-editorial strong {
+    @apply font-semibold text-ink;
+  }
+  .prose-editorial em {
+    @apply italic;
+  }
+  .prose-editorial blockquote {
+    @apply border-l-2 border-gold pl-6 font-serif text-xl italic text-ink-soft;
+  }
+}

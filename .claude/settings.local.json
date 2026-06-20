@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm view *)",
+      "PowerShell($conns = Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue; if \\($conns\\) { $conns | Select-Object -ExpandProperty OwningProcess -Unique | ForEach-Object { try { Stop-Process -Id $_ -Force; \"Stopped PID $_\" } catch {} } } else { \"Nothing on 3000\" })",
+      "Bash(npm install *)",
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(ls node_modules/payload)",
+      "Bash(rm -f prune.log)"
+    ]
+  }
+}
