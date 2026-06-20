@@ -3,13 +3,16 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 import { buildMetadata } from '@/lib/seo'
-import { getCurrentUser, getMyAuthorProfile, isStaff, type AppRole } from '@/lib/auth'
+import { getCurrentUser, isStaff, type AppRole } from '@/lib/auth'
+import { createClient } from '@/lib/supabase/server'
 import { Section } from '@/components/ui/section'
 import { PageHeader } from '@/components/sections/page-header'
 import { Button } from '@/components/ui/button'
 import { Tag } from '@/components/ui/tag'
 import { Card } from '@/components/ui/card'
 import { LogoutButton } from '@/components/auth/logout-button'
+import { AuthorProfileForm, type EditableAuthor } from '@/components/forms/author-profile-form'
+import { updateMyAuthorProfile } from './actions'
 
 export const metadata: Metadata = buildMetadata({
   title: 'A minha conta',
@@ -59,7 +62,13 @@ export default async function ContaPage() {
     )
   }
 
-  const profile = user.role === 'author' ? await getMyAuthorProfile(user.id) : null
+  type MyAuthor = EditableAuthor & { status?: string; slug?: string }
+  let authorFull: MyAuthor | null = null
+  if (user.role === 'author') {
+    const supabase = await createClient()
+    const { data } = await supabase.from('authors').select('*').eq('owner', user.id).maybeSingle()
+    authorFull = (data as MyAuthor) ?? null
+  }
 
   return (
     <>
@@ -91,26 +100,38 @@ export default async function ContaPage() {
             <Card className="p-8 md:col-span-2">
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <h2 className="text-h3 font-semibold tracking-tightish text-ink">
-                  {profile?.nome ?? 'O meu perfil'}
+                  {authorFull?.nome ?? 'O meu perfil'}
                 </h2>
-                {profile ? (
-                  <Tag variant={profile.status === 'published' ? 'country' : 'gold'}>
-                    {profile.status === 'published'
+                {authorFull ? (
+                  <Tag variant={authorFull.status === 'published' ? 'country' : 'gold'}>
+                    {authorFull.status === 'published'
                       ? 'Publicado'
                       : 'Rascunho — a aguardar aprovação'}
                   </Tag>
                 ) : null}
               </div>
-              <p className="mt-3 text-small text-ink-soft">
-                {profile
-                  ? 'O seu perfil fica público após aprovação da editora.'
-                  : 'Ainda não tem um perfil de autor associado. Contacte a editora.'}
-              </p>
-              {profile?.status === 'published' ? (
-                <Button asChild variant="outline" size="sm" className="mt-6">
-                  <Link href={`/autores/${profile.slug}`}>Ver perfil público</Link>
-                </Button>
-              ) : null}
+
+              {authorFull ? (
+                <>
+                  {authorFull.status === 'published' && authorFull.slug ? (
+                    <Button asChild variant="outline" size="sm" className="mt-4">
+                      <Link href={`/autores/${authorFull.slug}`}>Ver perfil público</Link>
+                    </Button>
+                  ) : null}
+
+                  <div className="mt-8 border-t border-border pt-8">
+                    <p className="label text-emerald">Editar</p>
+                    <h3 className="mt-2 text-h3 font-semibold tracking-tightish text-ink">
+                      O meu perfil público
+                    </h3>
+                    <AuthorProfileForm author={authorFull} action={updateMyAuthorProfile} />
+                  </div>
+                </>
+              ) : (
+                <p className="mt-3 text-small text-ink-soft">
+                  Ainda não tem um perfil de autor associado. Contacte a editora.
+                </p>
+              )}
             </Card>
           ) : null}
 
