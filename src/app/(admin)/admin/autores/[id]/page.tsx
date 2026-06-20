@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Field, Input, Textarea, Select } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
+import { ImageUpload } from '@/components/forms/image-upload'
 import { saveAuthor } from '../../actions'
 
 export const dynamic = 'force-dynamic'
@@ -64,8 +65,8 @@ export default async function AdminAutorForm({ params }: Params) {
         <Field label="Biografia completa (Markdown)" htmlFor="bio" className="sm:col-span-2">
           <Textarea id="bio" name="bio_completa" className="min-h-48" defaultValue={a.bio_completa ?? ''} />
         </Field>
-        <Field label="Foto (URL)" htmlFor="foto">
-          <Input id="foto" name="foto_url" defaultValue={a.foto_url ?? ''} />
+        <Field label="Foto" htmlFor="foto" className="sm:col-span-2">
+          <ImageUpload name="foto_url" folder="autores" defaultValue={a.foto_url ?? ''} aspect="aspect-square" />
         </Field>
         <Field label="Vídeo (URL)" htmlFor="video">
           <Input id="video" name="video_url" defaultValue={a.video_url ?? ''} />

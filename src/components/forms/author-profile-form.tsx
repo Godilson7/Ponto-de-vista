@@ -5,6 +5,7 @@ import { useFormStatus } from 'react-dom'
 
 import { Field, Input, Textarea } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
+import { ImageUpload } from '@/components/forms/image-upload'
 
 export type EditableAuthor = {
   nome?: string | null
@@ -42,8 +43,8 @@ export function AuthorProfileForm({
       <Field label="Área principal" htmlFor="area">
         <Input id="area" name="area" defaultValue={author.area ?? ''} />
       </Field>
-      <Field label="Foto (URL)" htmlFor="foto_url" className="sm:col-span-2">
-        <Input id="foto_url" name="foto_url" defaultValue={author.foto_url ?? ''} />
+      <Field label="Foto" htmlFor="foto_url" className="sm:col-span-2">
+        <ImageUpload name="foto_url" folder="autores" defaultValue={author.foto_url ?? ''} aspect="aspect-square" />
       </Field>
       <Field label="Frase de posicionamento" htmlFor="frase" className="sm:col-span-2">
         <Input

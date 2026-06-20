@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Field, Input, Textarea, Select } from '@/components/ui/field'
 import { Button } from '@/components/ui/button'
+import { ImageUpload } from '@/components/forms/image-upload'
 import { saveBook } from '../../actions'
 
 export const dynamic = 'force-dynamic'
@@ -99,8 +100,8 @@ export default async function AdminLivroForm({ params }: Params) {
         <Field label="Link de compra" htmlFor="lc">
           <Input id="lc" name="link_compra" defaultValue={b.link_compra ?? ''} />
         </Field>
-        <Field label="Capa (URL)" htmlFor="capa">
-          <Input id="capa" name="capa_url" defaultValue={b.capa_url ?? ''} />
+        <Field label="Capa" htmlFor="capa" className="sm:col-span-2">
+          <ImageUpload name="capa_url" folder="livros" defaultValue={b.capa_url ?? ''} />
         </Field>
         <Field label="Relacionados (slugs, vírgula)" htmlFor="rel">
           <Input id="rel" name="relacionados" defaultValue={(b.relacionados ?? []).join(', ')} />
