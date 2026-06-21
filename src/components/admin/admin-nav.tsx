@@ -12,6 +12,7 @@ const items = [
   { label: 'Autores', href: '/admin/autores' },
   { label: 'Livros', href: '/admin/livros' },
   { label: 'Artigos', href: '/admin/artigos' },
+  { label: 'Eventos', href: '/admin/eventos' },
   { label: 'Taxonomias', href: '/admin/taxonomias' },
   { label: 'Pedidos', href: '/admin/pedidos' },
   { label: 'Utilizadores', href: '/admin/utilizadores' },

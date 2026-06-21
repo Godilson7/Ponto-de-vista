@@ -80,3 +80,29 @@ export type AdminBookListRow = {
   destaque?: boolean
   autor: Joined
 }
+
+export type AdminEventRow = {
+  id?: string
+  slug?: string
+  titulo?: string
+  descricao?: string
+  data_inicio?: string
+  hora?: string
+  local?: string
+  cidade?: string
+  pais?: string
+  tipo?: string
+  link?: string
+  capa_url?: string
+  autor_id?: string
+  destaque?: boolean
+  status?: string
+}
+
+export type AdminEventListRow = {
+  id: string
+  titulo: string
+  status: string
+  destaque?: boolean
+  data_inicio?: string | null
+}

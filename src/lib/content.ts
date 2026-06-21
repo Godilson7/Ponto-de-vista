@@ -305,27 +305,72 @@ export async function searchAuthors(q: string): Promise<Author[]> {
 // --------------------------------- Eventos ---------------------------------- //
 
 export type EventItem = {
+  id: string
+  slug: string
   titulo: string
+  descricao?: string
   data?: string
+  dataISO?: string
+  hora?: string
+  local?: string
+  cidade?: string
+  pais?: string
+  tipo: string
   link?: string
-  autorNome: string
-  autorSlug: string
+  capaUrl?: string
+  autorNome?: string
+  autorSlug?: string
+  destaque?: boolean
 }
 
-/** Agenda — agrega as participações (tipo "evento") dos autores publicados. */
+const EVENT_COLS =
+  'id,slug,titulo,descricao,data_inicio,hora,local,cidade,pais,tipo,link,capa_url,destaque,autor:authors(slug,nome)'
+
+function formatEventDate(d: string): string {
+  try {
+    return new Intl.DateTimeFormat('pt-PT', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }).format(new Date(`${d}T00:00:00`))
+  } catch {
+    return d
+  }
+}
+
+function mapEvent(row: any): EventItem {
+  const autor = Array.isArray(row.autor) ? row.autor[0] : row.autor
+  return {
+    id: row.id,
+    slug: row.slug,
+    titulo: row.titulo,
+    descricao: row.descricao ?? undefined,
+    dataISO: row.data_inicio ?? undefined,
+    data: row.data_inicio ? formatEventDate(row.data_inicio) : undefined,
+    hora: row.hora ?? undefined,
+    local: row.local ?? undefined,
+    cidade: row.cidade ?? undefined,
+    pais: row.pais ?? undefined,
+    tipo: row.tipo ?? 'evento',
+    link: row.link ?? undefined,
+    capaUrl: row.capa_url ?? undefined,
+    autorNome: autor?.nome ?? undefined,
+    autorSlug: autor?.slug ?? undefined,
+    destaque: row.destaque ?? false,
+  }
+}
+
+/** Agenda — eventos publicados, ordenados por data (próximos primeiro). */
 export async function getEvents(): Promise<EventItem[]> {
-  const authors = await getAuthors()
-  return authors.flatMap((a) =>
-    a.participacoes
-      .filter((p) => p.tipo === 'evento')
-      .map((p) => ({
-        titulo: p.titulo,
-        data: p.data,
-        link: p.link,
-        autorNome: a.nome,
-        autorSlug: a.slug,
-      })),
+  const sb = createPublicClient()
+  const rows = await safe<any>(
+    sb
+      .from('events')
+      .select(EVENT_COLS)
+      .eq('status', 'published')
+      .order('data_inicio', { ascending: true, nullsFirst: false }),
   )
+  return rows.map(mapEvent)
 }
 
 // ----------------------------------- Blog ----------------------------------- //

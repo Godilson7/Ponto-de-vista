@@ -12,6 +12,7 @@ function revalidatePublic() {
   revalidatePath('/autores')
   revalidatePath('/livros')
   revalidatePath('/blog')
+  revalidatePath('/eventos')
 }
 
 // --------------------------------- Autores --------------------------------- //
@@ -110,6 +111,48 @@ export async function deleteBook(formData: FormData) {
   await supabase.from('books').delete().eq('id', str(formData.get('id')))
   revalidatePublic()
   revalidatePath('/admin/livros')
+}
+
+// ---------------------------------- Eventos --------------------------------- //
+export async function saveEvent(formData: FormData) {
+  await requireStaff()
+  const supabase = await createClient()
+  const id = str(formData.get('id'))
+  const titulo = str(formData.get('titulo'))
+
+  const row = {
+    titulo,
+    slug: slugify(str(formData.get('slug')) || titulo),
+    descricao: strOrNull(formData.get('descricao')),
+    data_inicio: strOrNull(formData.get('data_inicio')),
+    hora: strOrNull(formData.get('hora')),
+    local: strOrNull(formData.get('local')),
+    cidade: strOrNull(formData.get('cidade')),
+    pais: strOrNull(formData.get('pais')),
+    tipo: str(formData.get('tipo')) || 'evento',
+    link: strOrNull(formData.get('link')),
+    capa_url: strOrNull(formData.get('capa_url')),
+    autor_id: strOrNull(formData.get('autor_id')),
+    destaque: formData.get('destaque') === 'on',
+    status: str(formData.get('status')) === 'published' ? 'published' : 'draft',
+  }
+
+  if (id) {
+    await supabase.from('events').update(row).eq('id', id)
+  } else {
+    await supabase.from('events').insert(row)
+  }
+  revalidatePublic()
+  revalidatePath('/admin/eventos')
+  redirect('/admin/eventos')
+}
+
+export async function deleteEvent(formData: FormData) {
+  await requireStaff()
+  const supabase = await createClient()
+  await supabase.from('events').delete().eq('id', str(formData.get('id')))
+  revalidatePublic()
+  revalidatePath('/admin/eventos')
 }
 
 // ---------------------------------- Artigos --------------------------------- //

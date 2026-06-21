@@ -31,33 +31,56 @@ export default async function EventosPage() {
       <Section>
         {events.length > 0 ? (
           <ul className="mx-auto max-w-3xl divide-y divide-border border-y border-border">
-            {events.map((e, i) => (
-              <li key={`${e.autorSlug}-${i}`} className="flex items-start gap-5 py-6">
-                <span className="mt-1 flex size-11 shrink-0 items-center justify-center rounded-full bg-emerald/10 text-emerald">
-                  <CalendarDays className="size-5" />
-                </span>
-                <div className="min-w-0 flex-1">
-                  {e.data ? <p className="label text-emerald">{e.data}</p> : null}
-                  <h2 className="mt-1 text-h3 font-medium tracking-tightish text-ink">{e.titulo}</h2>
-                  <p className="mt-1 text-small text-muted">
-                    com{' '}
-                    <Link href={`/autores/${e.autorSlug}`} className="text-emerald hover:underline">
-                      {e.autorNome}
-                    </Link>
-                  </p>
-                </div>
-                {e.link ? (
-                  <a
-                    href={e.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 self-center text-label uppercase text-emerald hover:text-emerald-deep"
-                  >
-                    Detalhes <ArrowUpRight className="size-3.5" />
-                  </a>
-                ) : null}
-              </li>
-            ))}
+            {events.map((e) => {
+              const meta = [e.local, e.cidade].filter(Boolean).join(' · ')
+              return (
+                <li key={e.id} className="flex items-start gap-5 py-6">
+                  <span className="mt-1 flex size-11 shrink-0 items-center justify-center rounded-full bg-emerald/10 text-emerald">
+                    <CalendarDays className="size-5" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    {e.data ? (
+                      <p className="label text-emerald">
+                        {e.data}
+                        {e.hora ? ` · ${e.hora}` : ''}
+                      </p>
+                    ) : null}
+                    <h2 className="mt-1 text-h3 font-medium tracking-tightish text-ink">
+                      {e.titulo}
+                    </h2>
+                    {meta ? <p className="mt-1 text-small text-muted">{meta}</p> : null}
+                    {e.autorNome ? (
+                      <p className="mt-1 text-small text-muted">
+                        com{' '}
+                        {e.autorSlug ? (
+                          <Link
+                            href={`/autores/${e.autorSlug}`}
+                            className="text-emerald hover:underline"
+                          >
+                            {e.autorNome}
+                          </Link>
+                        ) : (
+                          e.autorNome
+                        )}
+                      </p>
+                    ) : null}
+                    {e.descricao ? (
+                      <p className="mt-2 text-small leading-relaxed text-ink-soft">{e.descricao}</p>
+                    ) : null}
+                  </div>
+                  {e.link ? (
+                    <a
+                      href={e.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 self-center text-label uppercase text-emerald hover:text-emerald-deep"
+                    >
+                      Detalhes <ArrowUpRight className="size-3.5" />
+                    </a>
+                  ) : null}
+                </li>
+              )
+            })}
           </ul>
         ) : (
           <div className="mx-auto max-w-2xl rounded-md border border-dashed border-border bg-paper-card p-12 text-center">
