@@ -63,11 +63,28 @@ export default async function ContaPage() {
   }
 
   type MyAuthor = EditableAuthor & { status?: string; slug?: string }
+  type ContentRow = { id: string; titulo: string; status: string }
   let authorFull: MyAuthor | null = null
+  let myPosts: ContentRow[] = []
+  let myEvents: ContentRow[] = []
   if (user.role === 'author') {
     const supabase = await createClient()
-    const { data } = await supabase.from('authors').select('*').eq('owner', user.id).maybeSingle()
-    authorFull = (data as MyAuthor) ?? null
+    const [{ data: a }, { data: posts }, { data: events }] = await Promise.all([
+      supabase.from('authors').select('*').eq('owner', user.id).maybeSingle(),
+      supabase
+        .from('blog_posts')
+        .select('id,titulo,status')
+        .eq('owner', user.id)
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('events')
+        .select('id,titulo,status')
+        .eq('owner', user.id)
+        .order('created_at', { ascending: false }),
+    ])
+    authorFull = (a as MyAuthor) ?? null
+    myPosts = (posts as ContentRow[]) ?? []
+    myEvents = (events as ContentRow[]) ?? []
   }
 
   return (
@@ -97,42 +114,91 @@ export default async function ContaPage() {
           ) : null}
 
           {user.role === 'author' ? (
-            <Card className="p-8 md:col-span-2">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <h2 className="text-h3 font-semibold tracking-tightish text-ink">
-                  {authorFull?.nome ?? 'O meu perfil'}
-                </h2>
-                {authorFull ? (
-                  <Tag variant={authorFull.status === 'published' ? 'country' : 'gold'}>
-                    {authorFull.status === 'published'
-                      ? 'Publicado'
-                      : 'Rascunho — a aguardar aprovação'}
-                  </Tag>
-                ) : null}
+            <>
+              <div className="grid gap-4 sm:grid-cols-3 md:col-span-2">
+                <StatCard
+                  label="Perfil"
+                  value={authorFull?.status === 'published' ? 'Publicado' : 'Rascunho'}
+                />
+                <StatCard
+                  label="Artigos"
+                  value={`${myPosts.filter((p) => p.status === 'published').length} pub · ${myPosts.filter((p) => p.status !== 'published').length} rascunho`}
+                />
+                <StatCard
+                  label="Eventos"
+                  value={`${myEvents.filter((e) => e.status === 'published').length} pub · ${myEvents.filter((e) => e.status !== 'published').length} rascunho`}
+                />
               </div>
 
-              {authorFull ? (
-                <>
-                  {authorFull.status === 'published' && authorFull.slug ? (
-                    <Button asChild variant="outline" size="sm" className="mt-4">
-                      <Link href={`/autores/${authorFull.slug}`}>Ver perfil público</Link>
-                    </Button>
+              <Card className="p-8 md:col-span-2">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h2 className="text-h3 font-semibold tracking-tightish text-ink">
+                    {authorFull?.nome ?? 'O meu perfil'}
+                  </h2>
+                  {authorFull ? (
+                    <Tag variant={authorFull.status === 'published' ? 'country' : 'gold'}>
+                      {authorFull.status === 'published'
+                        ? 'Publicado'
+                        : 'Rascunho — a aguardar aprovação'}
+                    </Tag>
                   ) : null}
+                </div>
 
-                  <div className="mt-8 border-t border-border pt-8">
-                    <p className="label text-emerald">Editar</p>
-                    <h3 className="mt-2 text-h3 font-semibold tracking-tightish text-ink">
-                      O meu perfil público
-                    </h3>
-                    <AuthorProfileForm author={authorFull} action={updateMyAuthorProfile} />
-                  </div>
-                </>
-              ) : (
-                <p className="mt-3 text-small text-ink-soft">
-                  Ainda não tem um perfil de autor associado. Contacte a editora.
-                </p>
-              )}
-            </Card>
+                {authorFull ? (
+                  <>
+                    {authorFull.status === 'published' && authorFull.slug ? (
+                      <Button asChild variant="outline" size="sm" className="mt-4">
+                        <Link href={`/autores/${authorFull.slug}`}>Ver perfil público</Link>
+                      </Button>
+                    ) : null}
+
+                    <div className="mt-8 border-t border-border pt-8">
+                      <p className="label text-emerald">Editar</p>
+                      <h3 className="mt-2 text-h3 font-semibold tracking-tightish text-ink">
+                        O meu perfil público
+                      </h3>
+                      <AuthorProfileForm author={authorFull} action={updateMyAuthorProfile} />
+                    </div>
+                  </>
+                ) : (
+                  <p className="mt-3 text-small text-ink-soft">
+                    Ainda não tem um perfil de autor associado. Contacte a editora.
+                  </p>
+                )}
+              </Card>
+
+              <Card className="p-8">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="text-h3 font-semibold tracking-tightish text-ink">
+                    Os meus artigos
+                  </h3>
+                  <Button asChild size="sm">
+                    <Link href="/conta/artigos/novo">Novo</Link>
+                  </Button>
+                </div>
+                <ContentList
+                  items={myPosts}
+                  basePath="/conta/artigos"
+                  emptyText="Ainda não submeteu artigos."
+                />
+              </Card>
+
+              <Card className="p-8">
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="text-h3 font-semibold tracking-tightish text-ink">
+                    Os meus eventos
+                  </h3>
+                  <Button asChild size="sm">
+                    <Link href="/conta/eventos/novo">Novo</Link>
+                  </Button>
+                </div>
+                <ContentList
+                  items={myEvents}
+                  basePath="/conta/eventos"
+                  emptyText="Ainda não submeteu eventos."
+                />
+              </Card>
+            </>
           ) : null}
 
           {user.role === 'reader' ? (
@@ -158,5 +224,46 @@ export default async function ContaPage() {
         </div>
       </Section>
     </>
+  )
+}
+
+function StatCard({ label, value }: { label: string; value: string }) {
+  return (
+    <Card className="p-5">
+      <p className="label text-muted">{label}</p>
+      <p className="mt-1 font-medium text-ink">{value}</p>
+    </Card>
+  )
+}
+
+function ContentList({
+  items,
+  basePath,
+  emptyText,
+}: {
+  items: { id: string; titulo: string; status: string }[]
+  basePath: string
+  emptyText: string
+}) {
+  if (items.length === 0) {
+    return <p className="mt-4 text-small text-muted">{emptyText}</p>
+  }
+  return (
+    <ul className="mt-4 divide-y divide-border">
+      {items.map((it) => (
+        <li key={it.id} className="flex items-center justify-between gap-3 py-3">
+          <span className="min-w-0 flex-1 truncate text-small text-ink">{it.titulo}</span>
+          <Tag variant={it.status === 'published' ? 'country' : 'gold'}>
+            {it.status === 'published' ? 'Publicado' : 'Rascunho'}
+          </Tag>
+          <Link
+            href={`${basePath}/${it.id}`}
+            className="text-label uppercase text-emerald hover:text-emerald-deep"
+          >
+            Editar
+          </Link>
+        </li>
+      ))}
+    </ul>
   )
 }
