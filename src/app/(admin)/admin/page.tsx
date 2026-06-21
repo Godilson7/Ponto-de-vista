@@ -21,12 +21,31 @@ async function countOf(
   }
 }
 
+async function countPending(): Promise<number> {
+  try {
+    const supabase = await createClient()
+    const tables = ['authors', 'blog_posts', 'events']
+    const counts = await Promise.all(
+      tables.map((t) =>
+        supabase
+          .from(t)
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'draft')
+          .not('owner', 'is', null),
+      ),
+    )
+    return counts.reduce((sum, { count }) => sum + (count ?? 0), 0)
+  } catch {
+    return 0
+  }
+}
+
 export default async function AdminDashboard() {
-  const [autores, livros, artigos, rascunhos, pedidos, utilizadores] = await Promise.all([
+  const [autores, livros, artigos, pendentes, pedidos, utilizadores] = await Promise.all([
     countOf('authors'),
     countOf('books'),
     countOf('blog_posts'),
-    countOf('authors', { col: 'status', val: 'draft' }),
+    countPending(),
     countOf('contact_requests', { col: 'status', val: 'novo' }),
     countOf('profiles'),
   ])
@@ -35,7 +54,7 @@ export default async function AdminDashboard() {
     { label: 'Autores', value: autores, href: '/admin/autores' },
     { label: 'Livros', value: livros, href: '/admin/livros' },
     { label: 'Artigos', value: artigos, href: '/admin/artigos' },
-    { label: 'Autores em rascunho', value: rascunhos, href: '/admin/autores' },
+    { label: 'Pendentes de aprovação', value: pendentes, href: '/admin/aprovacoes' },
     { label: 'Pedidos novos', value: pedidos, href: '/admin/pedidos' },
     { label: 'Utilizadores', value: utilizadores, href: '/admin/utilizadores' },
   ]

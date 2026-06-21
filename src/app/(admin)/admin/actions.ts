@@ -265,3 +265,16 @@ export async function updateUserRole(formData: FormData) {
   revalidatePath('/admin/utilizadores')
   revalidatePath('/admin/autores')
 }
+
+// -------------------------------- Aprovações -------------------------------- //
+/** Publica uma submissão de autor (perfil, artigo ou evento). */
+export async function approveSubmission(formData: FormData) {
+  await requireStaff()
+  const supabase = await createClient()
+  const table = str(formData.get('table'))
+  const id = str(formData.get('id'))
+  if (!['authors', 'blog_posts', 'events'].includes(table) || !id) return
+  await supabase.from(table).update({ status: 'published' }).eq('id', id)
+  revalidatePublic()
+  revalidatePath('/admin/aprovacoes')
+}

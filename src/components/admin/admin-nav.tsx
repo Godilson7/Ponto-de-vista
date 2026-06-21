@@ -14,6 +14,7 @@ export const adminNavItems = [
   { label: 'Artigos', href: '/admin/artigos' },
   { label: 'Eventos', href: '/admin/eventos' },
   { label: 'Taxonomias', href: '/admin/taxonomias' },
+  { label: 'Aprovações', href: '/admin/aprovacoes' },
   { label: 'Pedidos', href: '/admin/pedidos' },
   { label: 'Utilizadores', href: '/admin/utilizadores' },
 ]
