@@ -13,6 +13,7 @@ import {
   getRelatedBooks,
   getBuyUrl,
 } from '@/lib/content'
+import { buyButtonLabel } from '@/lib/utils'
 import { Section, SectionHeading } from '@/components/ui/section'
 import { Button } from '@/components/ui/button'
 import { Tag } from '@/components/ui/tag'
@@ -133,7 +134,7 @@ export default async function LivroPage({ params }: Params) {
               {buyUrl ? (
                 <Button asChild size="lg">
                   <a href={buyUrl} target="_blank" rel="noopener noreferrer">
-                    Comprar
+                    {buyButtonLabel(buyUrl)}
                   </a>
                 </Button>
               ) : null}

@@ -5,7 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { Trash2 } from 'lucide-react'
 
-import { formatEUR } from '@/lib/utils'
+import { formatEUR, buyButtonLabel } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { useCommerce } from '@/components/commerce/commerce-provider'
@@ -96,7 +96,7 @@ export default function CarrinhoPage() {
                         rel="noopener noreferrer"
                         className="text-label uppercase text-emerald hover:text-emerald-deep"
                       >
-                        Comprar
+                        {buyButtonLabel(r.link_compra)}
                       </a>
                     ) : null}
                     <button
