@@ -33,7 +33,7 @@ export default async function AdminUtilizadores() {
             </div>
             <form action={updateUserRole} className="flex items-center gap-2">
               <input type="hidden" name="id" value={u.id} />
-              <Select name="role" defaultValue={u.role} className="max-w-[160px]">
+              <Select name="role" defaultValue={u.role} className="w-52">
                 <option value="reader">Leitor</option>
                 <option value="author">Autor</option>
                 <option value="editor">Editor</option>
