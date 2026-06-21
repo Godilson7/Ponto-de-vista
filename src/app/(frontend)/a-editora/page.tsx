@@ -105,8 +105,8 @@ export default function AEditoraPage() {
           <div>
             <SectionHeading kicker="Conselho editorial" title="A equipa" />
             <p className="prose-editorial mt-6 max-w-none">
-              Uma equipa de editores, revisores e designers dedicada a tratar cada obra com o cuidado
-              de uma fundação cultural. Os perfis detalhados da equipa serão publicados em breve.
+              Uma equipa de editores, revisores e designers acompanha cada obra com o cuidado de uma
+              fundação cultural — do manuscrito à estratégia de posicionamento internacional do autor.
             </p>
           </div>
           <div>

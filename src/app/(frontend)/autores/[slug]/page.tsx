@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation'
 import { ArrowUpRight, Mic, MapPin, PlayCircle, Mail } from 'lucide-react'
 
 import { buildMetadata, authorJsonLd, breadcrumbJsonLd } from '@/lib/seo'
-import { buildWhatsAppUrl } from '@/lib/site'
+import { buildMailtoUrl } from '@/lib/site'
 import {
   getAuthors,
   getAuthorBySlug,
@@ -107,7 +107,7 @@ export default async function AutorPage({ params }: Params) {
 
           <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-border pt-6">
             <Button asChild>
-              <a href={buildWhatsAppUrl(inviteMessage)} target="_blank" rel="noopener noreferrer">
+              <a href={buildMailtoUrl(`Convite — ${author.nome}`, inviteMessage)}>
                 <Mic className="size-4" /> Convidar
               </a>
             </Button>
@@ -296,7 +296,7 @@ export default async function AutorPage({ params }: Params) {
                 Convide {author.nome.split(' ')[0]} para o seu evento.
               </p>
               <Button asChild variant="gold" className="mt-6 w-full">
-                <a href={buildWhatsAppUrl(inviteMessage)} target="_blank" rel="noopener noreferrer">
+                <a href={buildMailtoUrl(`Convite — ${author.nome}`, inviteMessage)}>
                   Convidar para palestra
                 </a>
               </Button>

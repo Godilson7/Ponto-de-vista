@@ -11,11 +11,6 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000',
   locale: 'pt-PT',
   email: 'geral@pontodevista.pt',
-  whatsapp: {
-    // Número internacional sem símbolos (ex.: 351912345678). Placeholder até confirmação.
-    number: '351900000000',
-    label: '+351 900 000 000',
-  },
   // Navegação principal (catálogo/ações) — sem repetir os links utilitários.
   nav: [
     { label: 'Autores', href: '/autores' },
@@ -34,16 +29,13 @@ export const siteConfig = {
     { city: 'São Paulo', country: 'Brasil' },
     { city: 'Luanda', country: 'Angola' },
   ],
-  social: [
-    { label: 'Instagram', href: 'https://instagram.com' },
-    { label: 'LinkedIn', href: 'https://linkedin.com' },
-    { label: 'YouTube', href: 'https://youtube.com' },
-  ],
+  // Sem redes sociais públicas por agora — preencher quando os perfis reais existirem.
+  social: [] as { label: string; href: string }[],
 } as const
 
 export type SiteConfig = typeof siteConfig
 
-/** Constrói um link wa.me com mensagem pré-preenchida. */
-export function buildWhatsAppUrl(message: string): string {
-  return `https://wa.me/${siteConfig.whatsapp.number}?text=${encodeURIComponent(message)}`
+/** Constrói um link mailto com assunto e corpo pré-preenchidos. */
+export function buildMailtoUrl(subject: string, body: string): string {
+  return `mailto:${siteConfig.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
 }
