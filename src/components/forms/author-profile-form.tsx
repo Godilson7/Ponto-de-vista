@@ -16,6 +16,7 @@ export type EditableAuthor = {
   mini_bio?: string | null
   bio_completa?: string | null
   video_url?: string | null
+  whatsapp?: string | null
   redes?: unknown
 }
 
@@ -77,6 +78,13 @@ export function AuthorProfileForm({
       </Field>
       <Field label="Vídeo (URL)" htmlFor="video">
         <Input id="video" name="video_url" defaultValue={author.video_url ?? ''} />
+      </Field>
+      <Field
+        label="WhatsApp"
+        htmlFor="whatsapp"
+        hint="Nº internacional (ex.: 351912345678). Usado no botão “Convidar”."
+      >
+        <Input id="whatsapp" name="whatsapp" type="tel" defaultValue={author.whatsapp ?? ''} />
       </Field>
       <Field
         label="Redes sociais (JSON)"

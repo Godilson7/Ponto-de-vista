@@ -72,6 +72,9 @@ export default async function AdminAutorForm({ params }: Params) {
         <Field label="Vídeo (URL)" htmlFor="video">
           <Input id="video" name="video_url" defaultValue={a.video_url ?? ''} />
         </Field>
+        <Field label="WhatsApp" htmlFor="whatsapp">
+          <Input id="whatsapp" name="whatsapp" type="tel" defaultValue={a.whatsapp ?? ''} />
+        </Field>
         <Field label="Galeria (URLs separados por vírgula)" htmlFor="galeria" className="sm:col-span-2">
           <Input id="galeria" name="galeria" defaultValue={(a.galeria ?? []).join(', ')} />
         </Field>

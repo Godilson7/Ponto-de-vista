@@ -51,6 +51,7 @@ export async function updateMyAuthorProfile(formData: FormData): Promise<void> {
     mini_bio: strOrNull(formData.get('mini_bio')),
     bio_completa: strOrNull(formData.get('bio_completa')),
     video_url: strOrNull(formData.get('video_url')),
+    whatsapp: strOrNull(formData.get('whatsapp')),
     redes: parseJson(formData.get('redes'), [] as unknown[]),
     status: 'draft',
   }

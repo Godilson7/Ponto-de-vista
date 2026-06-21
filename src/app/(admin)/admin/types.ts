@@ -16,6 +16,7 @@ export type AdminAuthorRow = {
   bio_completa?: string
   foto_url?: string
   video_url?: string
+  whatsapp?: string
   galeria?: string[]
   redes?: unknown
   participacoes?: unknown

@@ -34,6 +34,7 @@ export async function saveAuthor(formData: FormData) {
     bio_completa: strOrNull(formData.get('bio_completa')),
     foto_url: strOrNull(formData.get('foto_url')),
     video_url: strOrNull(formData.get('video_url')),
+    whatsapp: strOrNull(formData.get('whatsapp')),
     galeria: csvToArray(formData.get('galeria')),
     redes: parseJson(formData.get('redes'), [] as unknown[]),
     participacoes: parseJson(formData.get('participacoes'), [] as unknown[]),

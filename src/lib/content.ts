@@ -32,6 +32,7 @@ export type Author = {
   redesSociais: SocialLink[]
   participacoes: Participation[]
   videoUrl?: string
+  whatsapp?: string
   destaque?: boolean
 }
 
@@ -84,7 +85,7 @@ export type BlogPost = {
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 const AUTHOR_COLS =
-  'slug,nome,pais,cidade,area,areas_de_autoridade,frase_posicionamento,mini_bio,bio_completa,foto_url,video_url,redes,participacoes,galeria,destaque'
+  'slug,nome,pais,cidade,area,areas_de_autoridade,frase_posicionamento,mini_bio,bio_completa,foto_url,video_url,redes,participacoes,galeria,destaque,whatsapp'
 
 const BOOK_COLS_BASE =
   'id,slug,titulo,subtitulo,sinopse_curta,sinopse_completa,temas,categoria,pais,publico_indicado,isbn,num_paginas,formato,link_compra,capa_url,fotos_lancamento,depoimentos,relacionados,destaque,autor:authors(slug,nome)'
@@ -112,6 +113,7 @@ function mapAuthor(row: any): Author {
     redesSociais: Array.isArray(row.redes) ? row.redes : [],
     participacoes: Array.isArray(row.participacoes) ? row.participacoes : [],
     videoUrl: row.video_url ?? undefined,
+    whatsapp: row.whatsapp ?? undefined,
     destaque: row.destaque ?? false,
   }
 }

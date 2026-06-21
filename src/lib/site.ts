@@ -39,3 +39,9 @@ export type SiteConfig = typeof siteConfig
 export function buildMailtoUrl(subject: string, body: string): string {
   return `mailto:${siteConfig.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
 }
+
+/** Constrói um link wa.me para um número (internacional) com mensagem pré-preenchida. */
+export function buildWhatsAppUrl(number: string, message: string): string {
+  const digits = number.replace(/\D/g, '')
+  return `https://wa.me/${digits}?text=${encodeURIComponent(message)}`
+}
