@@ -25,8 +25,16 @@ export default function FrontendLayout({ children }: { children: React.ReactNode
         <ThemeScript />
         <JsonLd data={organizationJsonLd()} />
         <CommerceProvider>
+          <a
+            href="#conteudo"
+            className="sr-only rounded-sm bg-emerald px-4 py-2 text-small text-paper focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100]"
+          >
+            Saltar para o conteúdo
+          </a>
           <Navbar />
-          <main className="flex-1">{children}</main>
+          <main id="conteudo" className="flex-1">
+            {children}
+          </main>
           <Footer />
         </CommerceProvider>
       </body>

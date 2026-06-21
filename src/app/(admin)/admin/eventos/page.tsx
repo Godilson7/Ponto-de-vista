@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Card } from '@/components/ui/card'
 import { Tag } from '@/components/ui/tag'
+import { Button } from '@/components/ui/button'
+import { DeleteButton } from '@/components/admin/delete-button'
 import { deleteEvent } from '../actions'
 import type { AdminEventListRow } from '../types'
 
@@ -42,16 +44,15 @@ export default async function AdminEventos() {
               {e.status === 'published' ? 'Publicado' : 'Rascunho'}
             </Tag>
             {e.destaque ? <Tag variant="area">Destaque</Tag> : null}
-            <Link
-              href={`/admin/eventos/${e.id}`}
-              className="text-label uppercase text-emerald hover:text-emerald-deep"
-            >
-              Editar
-            </Link>
-            <form action={deleteEvent}>
-              <input type="hidden" name="id" value={e.id} />
-              <button className="text-label uppercase text-muted hover:text-ink">Eliminar</button>
-            </form>
+            <div className="flex items-center gap-1">
+              <Button asChild variant="outline" size="sm">
+                <Link href={`/admin/eventos/${e.id}`}>Editar</Link>
+              </Button>
+              <form action={deleteEvent}>
+                <input type="hidden" name="id" value={e.id} />
+                <DeleteButton confirmText={`Eliminar "${e.titulo}"?`} />
+              </form>
+            </div>
           </div>
         ))}
         {(eventos ?? []).length === 0 ? (

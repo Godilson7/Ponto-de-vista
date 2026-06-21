@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Card } from '@/components/ui/card'
 import { Tag } from '@/components/ui/tag'
+import { Button } from '@/components/ui/button'
+import { DeleteButton } from '@/components/admin/delete-button'
 import { deleteAuthor } from '../actions'
 
 export const dynamic = 'force-dynamic'
@@ -43,16 +45,15 @@ export default async function AdminAutores() {
               {a.status === 'published' ? 'Publicado' : 'Rascunho'}
             </Tag>
             {a.destaque ? <Tag variant="area">Destaque</Tag> : null}
-            <Link
-              href={`/admin/autores/${a.id}`}
-              className="text-label uppercase text-emerald hover:text-emerald-deep"
-            >
-              Editar
-            </Link>
-            <form action={deleteAuthor}>
-              <input type="hidden" name="id" value={a.id} />
-              <button className="text-label uppercase text-muted hover:text-ink">Eliminar</button>
-            </form>
+            <div className="flex items-center gap-1">
+              <Button asChild variant="outline" size="sm">
+                <Link href={`/admin/autores/${a.id}`}>Editar</Link>
+              </Button>
+              <form action={deleteAuthor}>
+                <input type="hidden" name="id" value={a.id} />
+                <DeleteButton confirmText={`Eliminar "${a.nome}"?`} />
+              </form>
+            </div>
           </div>
         ))}
         {(autores ?? []).length === 0 ? (

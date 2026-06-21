@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { Card } from '@/components/ui/card'
 import { Tag } from '@/components/ui/tag'
+import { Button } from '@/components/ui/button'
+import { DeleteButton } from '@/components/admin/delete-button'
 import { deletePost } from '../actions'
 import type { AdminPostListRow } from '../types'
 
@@ -43,16 +45,15 @@ export default async function AdminArtigos() {
               <Tag variant={p.status === 'published' ? 'country' : 'gold'}>
                 {p.status === 'published' ? 'Publicado' : 'Rascunho'}
               </Tag>
-              <Link
-                href={`/admin/artigos/${p.id}`}
-                className="text-label uppercase text-emerald hover:text-emerald-deep"
-              >
-                Editar
-              </Link>
-              <form action={deletePost}>
-                <input type="hidden" name="id" value={p.id} />
-                <button className="text-label uppercase text-muted hover:text-ink">Eliminar</button>
-              </form>
+              <div className="flex items-center gap-1">
+                <Button asChild variant="outline" size="sm">
+                  <Link href={`/admin/artigos/${p.id}`}>Editar</Link>
+                </Button>
+                <form action={deletePost}>
+                  <input type="hidden" name="id" value={p.id} />
+                  <DeleteButton confirmText={`Eliminar "${p.titulo}"?`} />
+                </form>
+              </div>
             </div>
           )
         })}

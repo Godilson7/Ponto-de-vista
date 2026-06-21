@@ -8,7 +8,7 @@ import { fontVariables } from '@/lib/fonts'
 import { buildMetadata } from '@/lib/seo'
 import { requireStaff } from '@/lib/admin'
 import { Wordmark } from '@/components/brand/wordmark'
-import { AdminNav } from '@/components/admin/admin-nav'
+import { AdminNav, AdminMobileNav } from '@/components/admin/admin-nav'
 import { ThemeScript } from '@/components/theme/theme-script'
 
 export const metadata: Metadata = {
@@ -41,6 +41,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
                 Ver site
               </Link>
             </header>
+            <AdminMobileNav />
             <main className="mx-auto max-w-5xl px-6 py-10 lg:px-10">{children}</main>
           </div>
         </div>
