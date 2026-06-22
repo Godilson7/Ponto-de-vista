@@ -3,7 +3,7 @@
 import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react'
+import { BookOpen, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react'
 
 import { formatEUR } from '@/lib/utils'
 import type { Book } from '@/lib/content'
@@ -104,13 +104,16 @@ export function BookCarousel({ books }: { books: Book[] }) {
               />
             ) : (
               <div
-                className="flex h-full w-full flex-col justify-between p-6"
+                className="flex h-full w-full flex-col items-center justify-center gap-5 p-6 text-center"
                 style={{ background: '#163b2c', color: LIGHT }}
               >
+                <BookOpen className="size-9" style={{ color: 'rgba(243,238,228,0.55)' }} aria-hidden />
                 <span className="gold-rule" aria-hidden="true" />
-                <span className="font-serif text-2xl italic leading-tight">{book.titulo}</span>
-                <span className="text-label uppercase" style={{ color: 'rgba(243,238,228,0.7)' }}>
-                  {book.autorNome}
+                <span
+                  className="text-label uppercase tracking-[0.22em]"
+                  style={{ color: 'rgba(243,238,228,0.65)' }}
+                >
+                  Ponto de Vista
                 </span>
               </div>
             )}
