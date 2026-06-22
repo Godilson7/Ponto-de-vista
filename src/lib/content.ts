@@ -426,6 +426,88 @@ export async function getPostsByAuthorName(name: string): Promise<BlogPost[]> {
   return all.filter((p) => p.autorNome === name)
 }
 
+// ----------------------------- Destaques (home) ------------------------------ //
+
+export type Highlight = {
+  kind: 'evento' | 'desconto' | 'artigo' | 'livro'
+  kicker: string
+  titulo: string
+  subtitulo?: string
+  href: string
+  capaUrl?: string
+  cta: string
+  preco?: number
+  precoPromocional?: number
+}
+
+function roundRobin<T>(lists: T[][]): T[] {
+  const out: T[] = []
+  const max = Math.max(0, ...lists.map((l) => l.length))
+  for (let i = 0; i < max; i++) {
+    for (const l of lists) if (l[i] !== undefined) out.push(l[i])
+  }
+  return out
+}
+
+/**
+ * Destaques da home — novidades da editora: eventos, livros em promoção e
+ * artigos exclusivos, intercalados. Só recorre a livros recentes se não houver
+ * novidades (para o destaque nunca ficar vazio).
+ */
+export async function getHomeHighlights(): Promise<Highlight[]> {
+  const [events, books, posts] = await Promise.all([getEvents(), getBooks(), getPosts()])
+
+  const eventos: Highlight[] = events.slice(0, 3).map((e) => ({
+    kind: 'evento',
+    kicker: 'Evento',
+    titulo: e.titulo,
+    subtitulo: [e.data, e.local || e.cidade].filter(Boolean).join(' · ') || undefined,
+    href: '/eventos',
+    capaUrl: e.capaUrl,
+    cta: 'Ver agenda',
+  }))
+
+  const descontos: Highlight[] = books
+    .filter((b) => b.precoPromocional != null && b.preco != null && b.precoPromocional < b.preco)
+    .slice(0, 3)
+    .map((b) => ({
+      kind: 'desconto',
+      kicker: `Promoção · −${Math.round((1 - b.precoPromocional! / b.preco!) * 100)}%`,
+      titulo: b.titulo,
+      subtitulo: b.autorNome,
+      href: `/livros/${b.slug}`,
+      capaUrl: b.capaUrl,
+      cta: 'Ver livro',
+      preco: b.preco,
+      precoPromocional: b.precoPromocional,
+    }))
+
+  const artigos: Highlight[] = posts.slice(0, 3).map((p) => ({
+    kind: 'artigo',
+    kicker: 'Artigo exclusivo',
+    titulo: p.titulo,
+    subtitulo: p.resumo || undefined,
+    href: `/blog/${p.slug}`,
+    capaUrl: p.capaUrl,
+    cta: 'Ler artigo',
+  }))
+
+  const highlights = roundRobin([eventos, descontos, artigos]).slice(0, 6)
+  if (highlights.length > 0) return highlights
+
+  return books.slice(0, 5).map((b) => ({
+    kind: 'livro',
+    kicker: 'Catálogo',
+    titulo: b.titulo,
+    subtitulo: b.autorNome,
+    href: `/livros/${b.slug}`,
+    capaUrl: b.capaUrl,
+    cta: 'Ver livro',
+    preco: b.preco,
+    precoPromocional: b.precoPromocional,
+  }))
+}
+
 // --------------------------------- Utilidades -------------------------------- //
 
 export function getBuyUrl(book: Book): string | undefined {

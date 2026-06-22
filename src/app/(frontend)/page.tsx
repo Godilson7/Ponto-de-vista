@@ -3,12 +3,12 @@ import Link from 'next/link'
 import type { Metadata } from 'next'
 
 import { buildMetadata } from '@/lib/seo'
-import { getFeaturedAuthors, getFeaturedBooks, getBooks } from '@/lib/content'
+import { getFeaturedAuthors, getFeaturedBooks, getBooks, getHomeHighlights } from '@/lib/content'
 import { Section, SectionHeading } from '@/components/ui/section'
 import { Button } from '@/components/ui/button'
 import { AuthorCard } from '@/components/cards/author-card'
 import { BookCard } from '@/components/cards/book-card'
-import { BookCarousel } from '@/components/sections/book-carousel'
+import { HighlightsCarousel } from '@/components/sections/highlights-carousel'
 import { StatsBand, type Stat } from '@/components/sections/stats-band'
 import { Reveal } from '@/components/motion/reveal'
 
@@ -57,17 +57,17 @@ const presence = [
 ]
 
 export default async function HomePage() {
-  const [featuredAuthors, featuredBooks, allBooks] = await Promise.all([
+  const [featuredAuthors, featuredBooks, allBooks, highlights] = await Promise.all([
     getFeaturedAuthors(),
     getFeaturedBooks(),
     getBooks(),
+    getHomeHighlights(),
   ])
-  const carouselBooks = (featuredBooks.length ? featuredBooks : allBooks).slice(0, 5)
   const gridBooks = featuredBooks.length ? featuredBooks : allBooks.slice(0, 6)
 
   return (
     <>
-      <BookCarousel books={carouselBooks} />
+      <HighlightsCarousel items={highlights} />
 
       {/* Quem somos */}
       <Section>

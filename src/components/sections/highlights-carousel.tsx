@@ -3,21 +3,35 @@
 import * as React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { BookOpen, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react'
+import {
+  BookOpen,
+  CalendarDays,
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  Pause,
+  Play,
+} from 'lucide-react'
 
 import { formatEUR } from '@/lib/utils'
-import type { Book } from '@/lib/content'
+import type { Highlight } from '@/lib/content'
 import { Button } from '@/components/ui/button'
 
-// Banner dramático e SEMPRE escuro (independente do tema). Por isso o texto
-// usa cores claras FIXAS (não os tokens paper/ink, que invertem no modo escuro).
+// Banner dramático e SEMPRE escuro (independente do tema) — cores claras fixas.
 const BANNER_BG = 'linear-gradient(120deg, #0e1c15 0%, #1b3d2c 52%, #0e1c15 100%)'
 const LIGHT = '#F3EEE4'
 
-export function BookCarousel({ books }: { books: Book[] }) {
+const ICONS = {
+  evento: CalendarDays,
+  desconto: BookOpen,
+  livro: BookOpen,
+  artigo: FileText,
+} as const
+
+export function HighlightsCarousel({ items }: { items: Highlight[] }) {
   const [index, setIndex] = React.useState(0)
   const [paused, setPaused] = React.useState(false)
-  const n = books.length
+  const n = items.length
 
   React.useEffect(() => {
     if (paused || n <= 1) return
@@ -27,15 +41,16 @@ export function BookCarousel({ books }: { books: Book[] }) {
 
   if (n === 0) return null
   const go = (delta: number) => setIndex((p) => (p + delta + n) % n)
-  const book = books[index]
+  const item = items[index]
+  const Icon = ICONS[item.kind]
   const hasPromo =
-    book.precoPromocional != null && book.preco != null && book.precoPromocional < book.preco
-  const price = hasPromo ? book.precoPromocional! : book.preco
+    item.precoPromocional != null && item.preco != null && item.precoPromocional < item.preco
+  const price = hasPromo ? item.precoPromocional! : item.preco
 
   return (
     <section
       aria-roledescription="carrossel"
-      aria-label="Livros em destaque"
+      aria-label="Destaques da editora"
       className="relative overflow-hidden border-b border-border"
       style={{ background: BANNER_BG, color: LIGHT }}
       onMouseEnter={() => setPaused(true)}
@@ -43,40 +58,32 @@ export function BookCarousel({ books }: { books: Book[] }) {
     >
       <div className="mx-auto grid max-w-content items-center gap-10 px-6 py-14 md:grid-cols-2 md:py-20 lg:px-8">
         <div className="order-2 md:order-1">
-          <p className="label text-gold">Exclusivo · Ponto de Vista</p>
+          <p className="label text-gold">{item.kicker}</p>
           <h2
-            key={`t-${book.slug}`}
+            key={`t-${index}`}
             className="mt-4 animate-fade-up text-h1 font-medium tracking-tightish"
             style={{ color: LIGHT }}
           >
-            {book.titulo}
+            {item.titulo}
           </h2>
-          {book.autorNome ? (
+          {item.subtitulo ? (
             <p
-              key={`a-${book.slug}`}
-              className="mt-3 animate-fade-up font-serif text-2xl italic"
-              style={{ color: 'rgba(243,238,228,0.85)' }}
+              key={`s-${index}`}
+              className="mt-4 line-clamp-3 max-w-prose animate-fade-up"
+              style={{ color: 'rgba(243,238,228,0.74)' }}
             >
-              {book.autorNome}
-            </p>
-          ) : null}
-          {book.sinopseCurta ? (
-            <p
-              className="mt-5 line-clamp-3 max-w-prose"
-              style={{ color: 'rgba(243,238,228,0.72)' }}
-            >
-              {book.sinopseCurta}
+              {item.subtitulo}
             </p>
           ) : null}
           <div className="mt-7 flex flex-wrap items-center gap-5">
             <Button asChild size="lg">
-              <Link href={`/livros/${book.slug}`}>Ver livro</Link>
+              <Link href={item.href}>{item.cta}</Link>
             </Button>
             {price != null ? (
               <span className="flex items-baseline gap-2">
                 {hasPromo ? (
                   <span className="line-through" style={{ color: 'rgba(243,238,228,0.5)' }}>
-                    {formatEUR(book.preco!)}
+                    {formatEUR(item.preco!)}
                   </span>
                 ) : null}
                 <span className="text-2xl font-semibold" style={{ color: LIGHT }}>
@@ -89,14 +96,14 @@ export function BookCarousel({ books }: { books: Book[] }) {
 
         <div className="order-1 flex justify-center md:order-2">
           <Link
-            href={`/livros/${book.slug}`}
-            key={`c-${book.slug}`}
+            href={item.href}
+            key={`c-${index}`}
             className="relative aspect-[3/4] w-44 animate-fade-up overflow-hidden rounded-md shadow-lift ring-1 ring-gold/40 sm:w-52 md:w-64"
           >
-            {book.capaUrl ? (
+            {item.capaUrl ? (
               <Image
-                src={book.capaUrl}
-                alt={`Capa de ${book.titulo}`}
+                src={item.capaUrl}
+                alt={item.titulo}
                 fill
                 sizes="256px"
                 className="object-cover"
@@ -107,13 +114,13 @@ export function BookCarousel({ books }: { books: Book[] }) {
                 className="flex h-full w-full flex-col items-center justify-center gap-5 p-6 text-center"
                 style={{ background: '#163b2c', color: LIGHT }}
               >
-                <BookOpen className="size-9" style={{ color: 'rgba(243,238,228,0.55)' }} aria-hidden />
+                <Icon className="size-9" style={{ color: 'rgba(243,238,228,0.55)' }} aria-hidden />
                 <span className="gold-rule" aria-hidden="true" />
                 <span
                   className="text-label uppercase tracking-[0.22em]"
                   style={{ color: 'rgba(243,238,228,0.65)' }}
                 >
-                  Ponto de Vista
+                  {item.kicker}
                 </span>
               </div>
             )}
@@ -121,7 +128,6 @@ export function BookCarousel({ books }: { books: Book[] }) {
         </div>
       </div>
 
-      {/* Controlos */}
       {n > 1 ? (
         <>
           <div className="absolute bottom-4 right-4 flex items-center gap-1.5">
@@ -140,9 +146,9 @@ export function BookCarousel({ books }: { books: Book[] }) {
           </div>
 
           <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-2">
-            {books.map((b, idx) => (
+            {items.map((it, idx) => (
               <button
-                key={b.slug}
+                key={`${it.kind}-${idx}`}
                 type="button"
                 onClick={() => setIndex(idx)}
                 aria-label={`Ir para o destaque ${idx + 1}`}
