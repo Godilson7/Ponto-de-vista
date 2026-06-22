@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-label="Territórios da Memória">
+  <rect width="600" height="800" fill="#163B2C"/>
+  <rect x="26" y="26" width="548" height="748" fill="none" stroke="#B0934A" stroke-opacity="0.45" stroke-width="1.5"/>
+  <path d="M60 300 H540 M60 340 H540 M60 380 H540" stroke="#F3EEE4" stroke-opacity="0.05" stroke-width="2"/>
+  <text x="60" y="108" font-family="Arial, Helvetica, sans-serif" font-size="19" letter-spacing="6" fill="#B0934A">PONTO DE VISTA</text>
+  <line x1="60" y1="134" x2="150" y2="134" stroke="#B0934A" stroke-width="2"/>
+  <text font-family="Georgia, 'Times New Roman', serif" font-style="italic" fill="#F3EEE4">
+    <tspan x="60" y="420" font-size="72">Territórios</tspan>
+    <tspan x="60" y="504" font-size="72">da Memória</tspan>
+  </text>
+  <line x1="60" y1="708" x2="116" y2="708" stroke="#B0934A" stroke-width="2"/>
+  <text x="60" y="742" font-family="Arial, Helvetica, sans-serif" font-size="21" letter-spacing="3" fill="#F3EEE4" fill-opacity="0.88">JOÃO CARVALHO</text>
+</svg>

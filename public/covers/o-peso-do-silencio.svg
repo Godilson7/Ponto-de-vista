@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 800" role="img" aria-label="O Peso do Silêncio">
+  <rect width="600" height="800" fill="#15140F"/>
+  <rect x="26" y="26" width="548" height="748" fill="none" stroke="#B0934A" stroke-opacity="0.5" stroke-width="1.5"/>
+  <circle cx="300" cy="300" r="150" fill="none" stroke="#B0934A" stroke-opacity="0.12" stroke-width="1.5"/>
+  <text x="60" y="108" font-family="Arial, Helvetica, sans-serif" font-size="19" letter-spacing="6" fill="#B0934A">PONTO DE VISTA</text>
+  <line x1="60" y1="134" x2="150" y2="134" stroke="#B0934A" stroke-width="2"/>
+  <text font-family="Georgia, 'Times New Roman', serif" font-style="italic" fill="#F3EEE4">
+    <tspan x="60" y="410" font-size="80">O Peso</tspan>
+    <tspan x="60" y="498" font-size="80">do Silêncio</tspan>
+  </text>
+  <text x="60" y="560" font-family="Georgia, serif" font-style="italic" font-size="26" fill="#F3EEE4" fill-opacity="0.75">Ensaios sobre escuta e liderança</text>
+  <line x1="60" y1="708" x2="116" y2="708" stroke="#B0934A" stroke-width="2"/>
+  <text x="60" y="742" font-family="Arial, Helvetica, sans-serif" font-size="21" letter-spacing="3" fill="#F3EEE4" fill-opacity="0.88">MARIA FERNANDES</text>
+</svg>
