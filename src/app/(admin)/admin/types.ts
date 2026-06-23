@@ -61,6 +61,7 @@ export type AdminPostRow = {
   corpo?: string
   capa_url?: string
   published_at?: string
+  destaque?: boolean
   status?: string
 }
 

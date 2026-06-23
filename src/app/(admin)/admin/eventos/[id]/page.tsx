@@ -103,7 +103,7 @@ export default async function AdminEventoForm({ params }: Params) {
             defaultChecked={e.destaque ?? false}
             className="size-4"
           />
-          <span className="text-small text-ink">Destacar</span>
+          <span className="text-small text-ink">Destacar na home (banner)</span>
         </label>
 
         <div className="sm:col-span-2">

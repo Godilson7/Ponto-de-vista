@@ -78,6 +78,15 @@ export default async function AdminArtigoForm({ params }: Params) {
             <option value="published">Publicado</option>
           </Select>
         </Field>
+        <label className="flex items-center gap-3 self-end pb-3">
+          <input
+            type="checkbox"
+            name="destaque"
+            defaultChecked={p.destaque ?? false}
+            className="size-4"
+          />
+          <span className="text-small text-ink">Destacar na home (banner)</span>
+        </label>
 
         <div className="sm:col-span-2">
           <Button type="submit" size="lg">

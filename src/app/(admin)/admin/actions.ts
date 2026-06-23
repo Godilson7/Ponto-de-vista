@@ -172,6 +172,7 @@ export async function savePost(formData: FormData) {
     autor_nome: strOrNull(formData.get('autor_nome')),
     corpo: strOrNull(formData.get('corpo')),
     capa_url: strOrNull(formData.get('capa_url')),
+    destaque: formData.get('destaque') === 'on',
     published_at: publishedAt ? new Date(publishedAt).toISOString() : new Date().toISOString(),
     status: str(formData.get('status')) === 'published' ? 'published' : 'draft',
   }

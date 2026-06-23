@@ -449,15 +449,11 @@ function roundRobin<T>(lists: T[][]): T[] {
   return out
 }
 
-/**
- * Destaques da home — novidades da editora: eventos, livros em promoção e
- * artigos exclusivos, intercalados. Só recorre a livros recentes se não houver
- * novidades (para o destaque nunca ficar vazio).
- */
-export async function getHomeHighlights(): Promise<Highlight[]> {
-  const [events, books, posts] = await Promise.all([getEvents(), getBooks(), getPosts()])
+const isPromo = (b: Book) =>
+  b.precoPromocional != null && b.preco != null && b.precoPromocional < b.preco
 
-  const eventos: Highlight[] = events.slice(0, 3).map((e) => ({
+function eventHighlight(e: EventItem): Highlight {
+  return {
     kind: 'evento',
     kicker: 'Evento',
     titulo: e.titulo,
@@ -465,39 +461,16 @@ export async function getHomeHighlights(): Promise<Highlight[]> {
     href: '/eventos',
     capaUrl: e.capaUrl,
     cta: 'Ver agenda',
-  }))
+  }
+}
 
-  const descontos: Highlight[] = books
-    .filter((b) => b.precoPromocional != null && b.preco != null && b.precoPromocional < b.preco)
-    .slice(0, 3)
-    .map((b) => ({
-      kind: 'desconto',
-      kicker: `Promoção · −${Math.round((1 - b.precoPromocional! / b.preco!) * 100)}%`,
-      titulo: b.titulo,
-      subtitulo: b.autorNome,
-      href: `/livros/${b.slug}`,
-      capaUrl: b.capaUrl,
-      cta: 'Ver livro',
-      preco: b.preco,
-      precoPromocional: b.precoPromocional,
-    }))
-
-  const artigos: Highlight[] = posts.slice(0, 3).map((p) => ({
-    kind: 'artigo',
-    kicker: 'Artigo exclusivo',
-    titulo: p.titulo,
-    subtitulo: p.resumo || undefined,
-    href: `/blog/${p.slug}`,
-    capaUrl: p.capaUrl,
-    cta: 'Ler artigo',
-  }))
-
-  const highlights = roundRobin([eventos, descontos, artigos]).slice(0, 6)
-  if (highlights.length > 0) return highlights
-
-  return books.slice(0, 5).map((b) => ({
-    kind: 'livro',
-    kicker: 'Catálogo',
+function bookHighlight(b: Book): Highlight {
+  const promo = isPromo(b)
+  return {
+    kind: promo ? 'desconto' : 'livro',
+    kicker: promo
+      ? `Promoção · −${Math.round((1 - b.precoPromocional! / b.preco!) * 100)}%`
+      : 'Em destaque',
     titulo: b.titulo,
     subtitulo: b.autorNome,
     href: `/livros/${b.slug}`,
@@ -505,7 +478,69 @@ export async function getHomeHighlights(): Promise<Highlight[]> {
     cta: 'Ver livro',
     preco: b.preco,
     precoPromocional: b.precoPromocional,
+  }
+}
+
+function articleHighlight(p: BlogPost): Highlight {
+  return {
+    kind: 'artigo',
+    kicker: 'Artigo exclusivo',
+    titulo: p.titulo,
+    subtitulo: p.resumo || undefined,
+    href: `/blog/${p.slug}`,
+    capaUrl: p.capaUrl,
+    cta: 'Ler artigo',
+  }
+}
+
+/** Artigos marcados como destaque (depende de blog_posts.destaque — migração 09). */
+async function getFeaturedArticles(): Promise<Highlight[]> {
+  const sb = createPublicClient()
+  const rows = await safe<any>(
+    sb
+      .from('blog_posts')
+      .select('slug,titulo,resumo,capa_url')
+      .eq('status', 'published')
+      .eq('destaque', true)
+      .order('published_at', { ascending: false }),
+  )
+  return rows.map((p) => ({
+    kind: 'artigo' as const,
+    kicker: 'Artigo exclusivo',
+    titulo: p.titulo,
+    subtitulo: p.resumo || undefined,
+    href: `/blog/${p.slug}`,
+    capaUrl: p.capa_url ?? undefined,
+    cta: 'Ler artigo',
   }))
+}
+
+/**
+ * Destaques da home. Curadoria: se a editora marcar itens como "destaque"
+ * (eventos, livros ou artigos), o banner mostra só esses. Caso contrário,
+ * monta-se automaticamente (eventos próximos + livros em promoção + artigos
+ * recentes). Recorre a livros recentes se não houver nada (nunca fica vazio).
+ */
+export async function getHomeHighlights(): Promise<Highlight[]> {
+  const [events, books, recentPosts, featArticles] = await Promise.all([
+    getEvents(),
+    getBooks(),
+    getPosts(),
+    getFeaturedArticles(),
+  ])
+
+  const featEvents = events.filter((e) => e.destaque)
+  const featBooks = books.filter((b) => b.destaque)
+  const curated = featEvents.length + featBooks.length + featArticles.length > 0
+
+  const eventos = (curated ? featEvents : events).slice(0, 3).map(eventHighlight)
+  const livros = (curated ? featBooks : books.filter(isPromo)).slice(0, 3).map(bookHighlight)
+  const artigos = curated ? featArticles.slice(0, 3) : recentPosts.slice(0, 3).map(articleHighlight)
+
+  const highlights = roundRobin([eventos, livros, artigos]).slice(0, 6)
+  if (highlights.length > 0) return highlights
+
+  return books.slice(0, 5).map(bookHighlight)
 }
 
 // --------------------------------- Utilidades -------------------------------- //

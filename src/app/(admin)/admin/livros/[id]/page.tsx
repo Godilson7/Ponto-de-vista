@@ -121,7 +121,7 @@ export default async function AdminLivroForm({ params }: Params) {
         </Field>
         <label className="flex items-center gap-3 self-end pb-3">
           <input type="checkbox" name="destaque" defaultChecked={b.destaque ?? false} className="size-4" />
-          <span className="text-small text-ink">Destacar na homepage</span>
+          <span className="text-small text-ink">Destacar na home (banner + secção)</span>
         </label>
         <label className="flex items-center gap-3 self-end pb-3">
           <input
