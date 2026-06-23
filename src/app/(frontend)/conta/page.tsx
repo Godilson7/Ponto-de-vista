@@ -29,6 +29,15 @@ const roleLabels: Record<AppRole, string> = {
   reader: 'Leitor',
 }
 
+const adminLinks = [
+  { label: 'Autores', href: '/admin/autores' },
+  { label: 'Livros', href: '/admin/livros' },
+  { label: 'Artigos', href: '/admin/artigos' },
+  { label: 'Eventos', href: '/admin/eventos' },
+  { label: 'Aprovações', href: '/admin/aprovacoes' },
+  { label: 'Pedidos', href: '/admin/pedidos' },
+]
+
 export default async function ContaPage() {
   const user = await getCurrentUser()
 
@@ -89,12 +98,17 @@ export default async function ContaPage() {
 
   return (
     <>
-      <PageHeader kicker="A minha conta" title={`Olá, ${user.name || user.email}`} />
       <Section>
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-6">
-          <div className="flex items-center gap-3">
-            <Tag variant="country">{roleLabels[user.role]}</Tag>
-            <span className="text-small text-muted">{user.email}</span>
+        <div className="flex flex-wrap items-end justify-between gap-6 border-b border-border pb-8">
+          <div>
+            <p className="label text-emerald">A minha conta</p>
+            <h1 className="mt-2 text-h1 font-medium tracking-tightish text-ink">
+              Olá, {user.name || 'bem-vindo'}
+            </h1>
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <Tag variant="country">{roleLabels[user.role]}</Tag>
+              <span className="text-small text-muted">{user.email}</span>
+            </div>
           </div>
           <LogoutButton />
         </div>
@@ -103,13 +117,26 @@ export default async function ContaPage() {
           {isStaff(user.role) ? (
             <Card className="bg-emerald p-8 text-paper md:col-span-2">
               <p className="label text-gold">Editora</p>
-              <h2 className="mt-3 text-h3 font-semibold tracking-tightish">Painel de gestão</h2>
-              <p className="mt-2 text-small text-paper/80">
-                Gerir autores, livros, artigos, permissões e pedidos de contacto.
+              <h2 className="mt-3 text-h3 font-semibold tracking-tightish text-paper">
+                Painel de gestão
+              </h2>
+              <p className="mt-2 max-w-prose text-small text-paper/80">
+                Gerir autores, livros, artigos, eventos, aprovações e pedidos de contacto.
               </p>
               <Button asChild variant="gold" className="mt-6">
                 <Link href="/admin">Abrir painel</Link>
               </Button>
+              <div className="mt-7 grid grid-cols-2 gap-2 border-t border-paper/15 pt-6 sm:grid-cols-3">
+                {adminLinks.map((l) => (
+                  <Link
+                    key={l.href}
+                    href={l.href}
+                    className="rounded-sm bg-paper/10 px-4 py-2.5 text-center text-small text-paper transition-colors hover:bg-paper/20"
+                  >
+                    {l.label}
+                  </Link>
+                ))}
+              </div>
             </Card>
           ) : null}
 
