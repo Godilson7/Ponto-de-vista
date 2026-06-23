@@ -10,9 +10,10 @@ import { PageHeader } from '@/components/sections/page-header'
 import { Button } from '@/components/ui/button'
 import { Tag } from '@/components/ui/tag'
 import { Card } from '@/components/ui/card'
+import { Field, Input } from '@/components/ui/field'
 import { LogoutButton } from '@/components/auth/logout-button'
 import { AuthorProfileForm, type EditableAuthor } from '@/components/forms/author-profile-form'
-import { updateMyAuthorProfile } from './actions'
+import { updateMyAuthorProfile, updateMyAccount } from './actions'
 
 export const metadata: Metadata = buildMetadata({
   title: 'A minha conta',
@@ -114,6 +115,22 @@ export default async function ContaPage() {
         </div>
 
         <div className="mt-10 grid gap-6 md:grid-cols-2">
+          <Card className="p-8 md:col-span-2">
+            <p className="label text-emerald">Dados da conta</p>
+            <h2 className="mt-2 text-h3 font-semibold tracking-tightish text-ink">O meu nome</h2>
+            <form action={updateMyAccount} className="mt-5 flex flex-wrap items-end gap-4">
+              <div className="min-w-[240px] flex-1">
+                <Field label="Nome a apresentar" htmlFor="acc-name">
+                  <Input id="acc-name" name="name" defaultValue={user.name ?? ''} required />
+                </Field>
+              </div>
+              <Button type="submit">Guardar</Button>
+            </form>
+            <p className="mt-3 text-small text-muted">
+              O email (<strong>{user.email}</strong>) e o papel são geridos pela editora.
+            </p>
+          </Card>
+
           {isStaff(user.role) ? (
             <Card className="bg-emerald p-8 text-paper md:col-span-2">
               <p className="label text-gold">Editora</p>

@@ -146,3 +146,15 @@ export async function submitMyEvent(formData: FormData): Promise<void> {
   revalidatePath('/conta')
   redirect('/conta')
 }
+
+// --------------------------------- Conta ------------------------------------ //
+/** O utilizador atualiza o seu nome de conta (função segura — não altera o papel). */
+export async function updateMyAccount(formData: FormData): Promise<void> {
+  const user = await getCurrentUser()
+  if (!user) return
+  const name = str(formData.get('name'))
+  if (!name) return
+  const supabase = await createClient()
+  await supabase.rpc('update_my_name', { new_name: name })
+  revalidatePath('/conta')
+}
