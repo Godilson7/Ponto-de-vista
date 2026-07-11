@@ -10,7 +10,7 @@ export const siteConfig = {
     'Editora internacional de língua portuguesa. Publicamos histórias e construímos autoridade — conectando autores de Portugal, Brasil e África Lusófona ao mundo.',
   url: process.env.NEXT_PUBLIC_SERVER_URL || 'http://localhost:3000',
   locale: 'pt-PT',
-  email: 'geral@pontodevista.pt',
+  email: 'geral@edpontodevista.com',
   // Navegação principal (catálogo/ações) — sem repetir os links utilitários.
   nav: [
     { label: 'Autores', href: '/autores' },

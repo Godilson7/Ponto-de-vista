@@ -4,7 +4,7 @@ import * as React from 'react'
 import { Check } from 'lucide-react'
 
 import { siteConfig } from '@/lib/site'
-import { createClient } from '@/lib/supabase/client'
+import { submitContactRequest } from '@/lib/contact'
 import { Button } from '@/components/ui/button'
 import { Field, Input, Textarea, Select } from '@/components/ui/field'
 
@@ -35,8 +35,7 @@ export function ContactForm({
     const mensagemBase = get('mensagem')
     const mensagem = autorNome ? `[Autor: ${autorNome}] ${mensagemBase}` : mensagemBase
 
-    const supabase = createClient()
-    const { error: dbError } = await supabase.from('contact_requests').insert({
+    const result = await submitContactRequest({
       tipo,
       nome: get('nome'),
       email: get('email'),
@@ -46,10 +45,11 @@ export function ContactForm({
       livro_ja_escrito: /^sim/i.test(get('livroEscrito')),
       objetivo: get('objetivo') || null,
       mensagem,
+      website: get('website'), // honeypot — revalidado no servidor
     })
 
     setLoading(false)
-    if (dbError) {
+    if (!result.ok) {
       setError('Não foi possível enviar agora. Tente novamente ou escreva-nos por e-mail.')
       return
     }

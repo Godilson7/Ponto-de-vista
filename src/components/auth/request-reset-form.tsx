@@ -2,14 +2,13 @@
 
 import * as React from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Field, Input } from '@/components/ui/field'
 
-export function LoginForm() {
-  const router = useRouter()
+export function RequestResetForm() {
+  const [sent, setSent] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   const [loading, setLoading] = React.useState(false)
 
@@ -18,20 +17,28 @@ export function LoginForm() {
     setLoading(true)
     setError(null)
     const fd = new FormData(event.currentTarget)
+    const email = String(fd.get('email')).trim()
 
     const supabase = createClient()
-    const { error: authError } = await supabase.auth.signInWithPassword({
-      email: String(fd.get('email')),
-      password: String(fd.get('password')),
+    const { error: authError } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/auth/callback?next=/recuperar/nova-palavra-passe`,
     })
 
+    setLoading(false)
     if (authError) {
-      setError('Email ou palavra-passe incorretos.')
-      setLoading(false)
+      setError('Não foi possível enviar agora. Tente novamente dentro de instantes.')
       return
     }
-    router.push('/conta')
-    router.refresh()
+    setSent(true)
+  }
+
+  if (sent) {
+    return (
+      <p className="border border-em bg-paper-card px-4 py-4 text-small text-ink-soft">
+        Se existir uma conta com esse e-mail, enviámos um link para redefinir a
+        palavra-passe. Verifique também a pasta de spam.
+      </p>
+    )
   }
 
   return (
@@ -42,21 +49,13 @@ export function LoginForm() {
       <Field label="E-mail" htmlFor="email" required>
         <Input id="email" name="email" type="email" required autoComplete="email" />
       </Field>
-      <Field label="Palavra-passe" htmlFor="password" required>
-        <Input id="password" name="password" type="password" required autoComplete="current-password" />
-      </Field>
-      <div className="text-right">
-        <Link href="/recuperar" className="text-small text-emerald underline-offset-4 hover:underline">
-          Esqueci-me da palavra-passe
-        </Link>
-      </div>
       <Button type="submit" size="lg" className="w-full" disabled={loading}>
-        {loading ? 'A entrar…' : 'Entrar'}
+        {loading ? 'A enviar…' : 'Enviar link de recuperação'}
       </Button>
       <p className="text-center text-small text-muted">
-        Ainda não tem conta?{' '}
-        <Link href="/registar" className="text-emerald underline-offset-4 hover:underline">
-          Criar conta
+        Lembrou-se?{' '}
+        <Link href="/entrar" className="text-emerald underline-offset-4 hover:underline">
+          Entrar
         </Link>
       </p>
     </form>
