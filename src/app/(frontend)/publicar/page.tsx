@@ -63,8 +63,11 @@ export default function PublicarPage() {
         />
         <div className="mt-12 grid gap-px overflow-hidden border border-border bg-border md:grid-cols-2 lg:grid-cols-3">
           {steps.map((step) => (
-            <div key={step.n} className="bg-paper p-8">
-              <p className="font-sans text-4xl font-medium tracking-tightish text-emerald/30">
+            <div
+              key={step.n}
+              className="group bg-paper p-8 transition-colors duration-300 hover:bg-paper-card"
+            >
+              <p className="font-sans text-4xl font-medium tracking-tightish text-emerald/30 transition-colors duration-300 group-hover:text-emerald/60">
                 {step.n}
               </p>
               <h3 className="mt-4 text-h3 font-medium tracking-tightish text-ink">{step.title}</h3>

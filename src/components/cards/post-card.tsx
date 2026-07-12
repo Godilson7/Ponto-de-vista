@@ -22,7 +22,7 @@ export function PostCard({
   href,
 }: PostCardProps) {
   return (
-    <article className="group flex flex-col rounded-md border border-border bg-paper-card p-6 shadow-card transition-shadow duration-300 hover:shadow-lift">
+    <article className="group flex flex-col rounded-md border border-border bg-paper-card p-6 shadow-card transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-lift">
       <Link
         href={`/blog/${categorySlug}`}
         className="label w-fit text-emerald transition-colors hover:text-emerald-deep"

@@ -29,6 +29,15 @@ export function Navbar() {
     setSidebarOpen(false)
   }, [pathname])
 
+  // Sombra subtil quando se rola — separa o header sticky do conteúdo.
+  const [scrolled, setScrolled] = React.useState(false)
+  React.useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   const isActive = (href: string) => {
     const base = href.split('#')[0]
     return base === '/' ? pathname === '/' : pathname.startsWith(base)
@@ -36,7 +45,9 @@ export function Navbar() {
 
   return (
     <>
-      <header className="sticky top-0 z-50">
+      <header
+        className={cn('sticky top-0 z-50 transition-shadow duration-300', scrolled && 'shadow-soft')}
+      >
         {/* Tier 1 — links de topo, centrados e separados por | (dourado no escuro) */}
         <div className="bg-emerald dark:bg-[#0f2318]">
           <div className="mx-auto flex h-9 max-w-content items-center justify-center px-6 lg:px-8">
