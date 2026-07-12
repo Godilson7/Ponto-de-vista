@@ -13,7 +13,7 @@ import {
   getRelatedBooks,
   getBuyUrl,
 } from '@/lib/content'
-import { buyButtonLabel } from '@/lib/utils'
+import { buyButtonLabel, formatEUR } from '@/lib/utils'
 import { Section, SectionHeading } from '@/components/ui/section'
 import { Button } from '@/components/ui/button'
 import { Tag } from '@/components/ui/tag'
@@ -60,6 +60,9 @@ export default async function LivroPage({ params }: Params) {
   const author = book.autorSlug ? await getAuthorBySlug(book.autorSlug) : null
   const related = await getRelatedBooks(book)
   const buyUrl = getBuyUrl(book)
+  const hasPromo =
+    book.precoPromocional != null && book.preco != null && book.precoPromocional < book.preco
+  const precoFinal = hasPromo ? book.precoPromocional : book.preco
 
   return (
     <>
@@ -76,7 +79,7 @@ export default async function LivroPage({ params }: Params) {
       <Section>
         <div className="grid gap-10 md:grid-cols-12">
           <div className="md:col-span-4">
-            <div className="relative aspect-[3/4] overflow-hidden border border-border bg-emerald">
+            <div className="relative aspect-[3/4] overflow-hidden rounded-lg border border-border bg-emerald shadow-card md:sticky md:top-28">
               {book.capaUrl ? (
                 <Image
                   src={book.capaUrl}
@@ -130,7 +133,23 @@ export default async function LivroPage({ params }: Params) {
               ))}
             </div>
 
-            <div className="mt-8 flex flex-wrap items-center gap-4">
+            {book.preco != null ? (
+              <div className="mt-8 flex items-baseline gap-3">
+                {hasPromo ? (
+                  <span className="text-lg text-muted line-through">{formatEUR(book.preco)}</span>
+                ) : null}
+                <span className="font-serif text-3xl font-semibold text-emerald">
+                  {formatEUR(precoFinal!)}
+                </span>
+                {book.portesGratis ? (
+                  <span className="text-label uppercase tracking-[0.14em] text-emerald">
+                    Portes grátis
+                  </span>
+                ) : null}
+              </div>
+            ) : null}
+
+            <div className="mt-5 flex flex-wrap items-center gap-4">
               {buyUrl ? (
                 <Button asChild size="lg">
                   <a href={buyUrl} target="_blank" rel="noopener noreferrer">
@@ -222,7 +241,7 @@ export default async function LivroPage({ params }: Params) {
             {book.fotosLancamento.map((src, i) => (
               <div
                 key={i}
-                className="relative aspect-[4/3] overflow-hidden border border-border bg-emerald/5"
+                className="relative aspect-[4/3] overflow-hidden rounded-lg border border-border bg-emerald/5"
               >
                 <Image
                   src={src}

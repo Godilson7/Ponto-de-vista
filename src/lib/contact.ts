@@ -94,3 +94,30 @@ export async function submitContactRequest(input: ContactInput): Promise<Contact
 
   return { ok: true }
 }
+
+/**
+ * Subscrição da newsletter (rodapé). Guarda o email em `contact_requests`
+ * com tipo `newsletter`. Não envia notificação por cada subscritor (evita
+ * inundar o inbox); a editora vê as subscrições no painel.
+ */
+export async function subscribeNewsletter(email: string): Promise<ContactResult> {
+  const clean = clamp(email, 320)
+  if (!EMAIL_RE.test(clean)) {
+    return { ok: false, error: 'E-mail inválido.' }
+  }
+
+  const supabase = await createClient()
+  const { error } = await supabase.from('contact_requests').insert({
+    tipo: 'newsletter',
+    nome: 'Subscritor da newsletter',
+    email: clean,
+    mensagem: 'Subscrição da newsletter (rodapé).',
+  })
+
+  if (error) {
+    console.error('[newsletter] Falha ao guardar a subscrição:', error)
+    return { ok: false, error: 'Não foi possível subscrever agora.' }
+  }
+
+  return { ok: true }
+}

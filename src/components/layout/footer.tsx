@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { siteConfig } from '@/lib/site'
 import { Container } from '@/components/ui/container'
 import { Wordmark } from '@/components/brand/wordmark'
+import { NewsletterForm } from '@/components/forms/newsletter-form'
 
 export function Footer() {
   const year = new Date().getFullYear()
@@ -11,7 +12,21 @@ export function Footer() {
   return (
     <footer className="border-t border-border bg-ink text-paper">
       <Container className="py-16">
-        <div className="grid gap-12 md:grid-cols-12">
+        {/* Newsletter */}
+        <div className="flex flex-col gap-6 border-b border-paper/15 pb-12 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-md">
+            <p className="label text-gold">Newsletter</p>
+            <h2 className="mt-3 font-serif text-2xl font-medium text-paper">
+              Receba as novidades da editora
+            </h2>
+            <p className="mt-2 text-small leading-relaxed text-paper/60">
+              Lançamentos, eventos e vozes de autoridade — sem ruído.
+            </p>
+          </div>
+          <NewsletterForm />
+        </div>
+
+        <div className="mt-12 grid gap-12 md:grid-cols-12">
           {/* Marca + manifesto */}
           <div className="md:col-span-5">
             <Wordmark inverted />
