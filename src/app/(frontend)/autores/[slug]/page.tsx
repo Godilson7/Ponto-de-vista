@@ -211,7 +211,7 @@ export default async function AutorPage({ params }: Params) {
             {author.videoUrl ? (
               <CardSection kicker="Apresentação" title="Vídeo">
                 {embedUrl ? (
-                  <div className="relative aspect-video w-full overflow-hidden rounded-sm bg-ink">
+                  <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-ink">
                     <iframe
                       src={embedUrl}
                       title={`Vídeo de apresentação de ${author.nome}`}
@@ -237,7 +237,7 @@ export default async function AutorPage({ params }: Params) {
                   {author.galeria.map((src, i) => (
                     <div
                       key={i}
-                      className="relative aspect-[4/3] overflow-hidden rounded-sm bg-emerald/5"
+                      className="relative aspect-[4/3] overflow-hidden rounded-lg bg-emerald/5"
                     >
                       <Image
                         src={src}
