@@ -81,8 +81,8 @@ const config: Config = {
         label: ['0.6875rem', { lineHeight: '1', letterSpacing: '0.2em' }],
       },
       spacing: {
-        section: '7.5rem', // 120px — padding-block de secção (desktop)
-        'section-sm': '4.5rem',
+        section: '6rem', // 96px — ritmo de secção (desktop); múltiplo de 8
+        'section-sm': '4rem', // 64px — mobile
       },
       borderRadius: {
         sm: '3px',
