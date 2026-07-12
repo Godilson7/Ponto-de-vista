@@ -78,9 +78,18 @@ export default async function AutorPage({ params }: Params) {
         ])}
       />
 
-      {/* Banner */}
-      <div className="relative h-40 w-full overflow-hidden bg-gradient-to-br from-emerald via-emerald to-emerald-deep md:h-56">
+      {/* Banner — banda de marca decorativa (não é uma imagem em falta) */}
+      <div className="relative h-32 w-full overflow-hidden bg-gradient-to-br from-emerald via-emerald to-emerald-deep md:h-44">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(120% 130% at 18% -20%, rgba(255,255,255,0.10), transparent 55%)',
+          }}
+        />
         <span className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-gold/0 via-gold to-gold/0" />
+        <span className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-gold/0 via-gold/40 to-gold/0" />
       </div>
 
       <Container className="pb-section-sm md:pb-section">
