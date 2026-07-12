@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { Field, Input } from '@/components/ui/field'
 
-export function LoginForm() {
+export function LoginForm({ next }: { next?: string }) {
   const router = useRouter()
   const [error, setError] = React.useState<string | null>(null)
   const [loading, setLoading] = React.useState(false)
@@ -30,7 +30,7 @@ export function LoginForm() {
       setLoading(false)
       return
     }
-    router.push('/conta')
+    router.push(next || '/')
     router.refresh()
   }
 

@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 export default async function EntrarPage({
   searchParams,
 }: {
-  searchParams: Promise<{ registado?: string; erro?: string }>
+  searchParams: Promise<{ registado?: string; erro?: string; next?: string }>
 }) {
   const user = await getCurrentUser()
   if (user) redirect('/conta')
@@ -22,6 +22,10 @@ export default async function EntrarPage({
     sp.erro === 'link-invalido'
       ? 'O link expirou ou já foi usado. Peça uma nova recuperação de palavra-passe.'
       : null
+
+  // Volta ao destino pedido (ex.: /carrinho) após entrar; por defeito, a homepage.
+  const next =
+    sp.next && sp.next.startsWith('/') && !sp.next.startsWith('//') ? sp.next : undefined
 
   return (
     <div className="animate-fade-up">
@@ -41,7 +45,7 @@ export default async function EntrarPage({
         </p>
       ) : null}
       <div className="mt-8">
-        <LoginForm />
+        <LoginForm next={next} />
       </div>
     </div>
   )
