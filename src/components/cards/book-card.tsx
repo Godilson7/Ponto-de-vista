@@ -9,7 +9,11 @@ import { cn, formatEUR } from '@/lib/utils'
 import type { Book } from '@/lib/content'
 import { useCommerce } from '@/components/commerce/commerce-provider'
 
-/** Cartão de livro compacto, estilo livraria (capa, preço, ações). */
+/**
+ * Cartão de livro — versão editorial premium.
+ * Capa em destaque que se eleva suavemente no hover, título em serif (Fraunces),
+ * categoria como eyebrow e preço tratado com elegância. Mantém cesto/lista.
+ */
 export function BookCard({ book, className }: { book: Book; className?: string }) {
   const { inWishlist, inCart, toggleWishlist, toggleCart } = useCommerce()
   const href = `/livros/${book.slug}`
@@ -17,57 +21,59 @@ export function BookCard({ book, className }: { book: Book; className?: string }
   const hasPromo =
     book.precoPromocional != null && book.preco != null && book.precoPromocional < book.preco
   const desconto = hasPromo ? Math.round((1 - book.precoPromocional! / book.preco!) * 100) : 0
+  const eyebrow = book.temas?.[0] || (book.portesGratis ? 'Portes grátis' : null)
   const fav = inWishlist(book.id)
   const carted = inCart(book.id)
 
   return (
     <article className={cn('group relative flex flex-col', className)}>
-      <div className="relative">
+      {/* Capa — eleva-se no hover (transform, não empurra a grelha) */}
+      <div className="relative transition-transform duration-500 ease-out group-hover:-translate-y-1.5">
         <Link
           href={href}
           aria-label={book.titulo}
-          className="block overflow-hidden rounded-md border border-border bg-emerald shadow-card transition-shadow duration-300 group-hover:shadow-lift"
+          className="relative block aspect-[3/4] overflow-hidden rounded-lg border border-border bg-emerald shadow-card transition-shadow duration-500 group-hover:shadow-lift"
         >
-          <div className="relative aspect-[3/4]">
-            {book.capaUrl ? (
-              <Image
-                src={book.capaUrl}
-                alt={`Capa de ${book.titulo}`}
-                fill
-                sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 200px"
-                className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-              />
-            ) : (
-              <div className="flex h-full w-full flex-col justify-between p-4 text-paper">
-                <span className="gold-rule" aria-hidden="true" />
-                <span className="font-serif text-lg italic leading-tight">{book.titulo}</span>
-                {book.autorNome ? (
-                  <span className="text-label uppercase text-paper/70">{book.autorNome}</span>
-                ) : null}
-              </div>
-            )}
-          </div>
+          {book.capaUrl ? (
+            <Image
+              src={book.capaUrl}
+              alt={`Capa de ${book.titulo}`}
+              fill
+              sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 260px"
+              className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.06]"
+            />
+          ) : (
+            <div className="flex h-full w-full flex-col justify-between p-5 text-paper">
+              <span className="gold-rule" aria-hidden="true" />
+              <span className="font-serif text-xl italic leading-tight">{book.titulo}</span>
+              {book.autorNome ? (
+                <span className="text-label uppercase tracking-wide text-paper/70">
+                  {book.autorNome}
+                </span>
+              ) : null}
+            </div>
+          )}
         </Link>
 
         {hasPromo ? (
-          <span className="absolute bottom-2 left-2 flex size-11 items-center justify-center rounded-full bg-emerald text-small font-semibold text-paper shadow-card">
-            -{desconto}%
+          <span className="absolute left-3 top-3 rounded-full bg-emerald px-2.5 py-1 text-label font-semibold uppercase tracking-wide text-paper shadow-card">
+            −{desconto}%
           </span>
         ) : null}
 
-        {/* Ações — aparecem no hover; só funcionam com sessão (gerido no provider) */}
-        <div className="absolute right-2 top-2 flex flex-col gap-2 opacity-0 transition-opacity duration-200 focus-within:opacity-100 group-hover:opacity-100">
+        {/* Ações — deslizam ao surgir no hover; só funcionam com sessão (provider) */}
+        <div className="absolute right-3 top-3 flex translate-y-[-6px] flex-col gap-2 opacity-0 transition-all duration-300 focus-within:translate-y-0 focus-within:opacity-100 group-hover:translate-y-0 group-hover:opacity-100">
           <button
             type="button"
             onClick={() => toggleWishlist(book.id)}
             aria-pressed={fav}
             aria-label={fav ? 'Remover da lista' : 'Adicionar à lista'}
             className={cn(
-              'flex size-9 items-center justify-center rounded-full bg-paper/95 text-ink shadow-card transition-colors hover:text-emerald',
+              'flex size-10 items-center justify-center rounded-full bg-paper/95 text-ink shadow-lift transition-colors hover:text-emerald',
               fav && 'text-emerald',
             )}
           >
-            <Heart className={cn('size-4', fav && 'fill-current')} />
+            <Heart className={cn('size-[1.05rem]', fav && 'fill-current')} />
           </button>
           <button
             type="button"
@@ -75,33 +81,34 @@ export function BookCard({ book, className }: { book: Book; className?: string }
             aria-pressed={carted}
             aria-label={carted ? 'Remover do cesto' : 'Adicionar ao cesto'}
             className={cn(
-              'flex size-9 items-center justify-center rounded-full shadow-card transition-colors',
+              'flex size-10 items-center justify-center rounded-full shadow-lift transition-colors',
               carted ? 'bg-emerald text-paper' : 'bg-paper/95 text-ink hover:text-emerald',
             )}
           >
-            <ShoppingBag className="size-4" />
+            <ShoppingBag className="size-[1.05rem]" />
           </button>
         </div>
       </div>
 
-      <div className="mt-3 flex flex-1 flex-col">
-        {book.portesGratis ? (
-          <span className="text-label uppercase text-emerald">Portes grátis</span>
+      {/* Meta */}
+      <div className="mt-4 flex flex-1 flex-col">
+        {eyebrow ? (
+          <span className="text-label uppercase tracking-[0.14em] text-emerald">{eyebrow}</span>
         ) : null}
-        <h3 className="mt-1 line-clamp-2 font-sans text-small font-medium leading-snug text-ink">
+        <h3 className="mt-1.5 line-clamp-2 font-serif text-lg font-medium leading-snug tracking-tightish text-ink">
           <Link href={href} className="transition-colors hover:text-emerald">
             {book.titulo}
           </Link>
         </h3>
         {book.autorNome ? (
-          <p className="mt-0.5 line-clamp-1 text-small text-muted">{book.autorNome}</p>
+          <p className="mt-1 line-clamp-1 text-small text-muted">{book.autorNome}</p>
         ) : null}
         {hasPrice ? (
-          <div className="mt-2 flex items-baseline gap-2">
+          <div className="mt-2.5 flex items-baseline gap-2">
             {hasPromo ? (
               <span className="text-small text-muted line-through">{formatEUR(book.preco!)}</span>
             ) : null}
-            <span className="text-base font-semibold text-emerald">
+            <span className="font-serif text-lg font-semibold text-emerald">
               {formatEUR(hasPromo ? book.precoPromocional! : book.preco!)}
             </span>
           </div>
