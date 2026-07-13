@@ -42,10 +42,12 @@ export async function saveAuthor(formData: FormData) {
     status: str(formData.get('status')) === 'published' ? 'published' : 'draft',
   }
 
-  if (id) {
-    await supabase.from('authors').update(row).eq('id', id)
-  } else {
-    await supabase.from('authors').insert(row)
+  const { error } = id
+    ? await supabase.from('authors').update(row).eq('id', id)
+    : await supabase.from('authors').insert(row)
+  if (error) {
+    console.error('[admin] saveAuthor falhou:', error)
+    throw new Error('Não foi possível guardar o autor.')
   }
   revalidatePublic()
   revalidatePath('/admin/autores')
@@ -100,10 +102,12 @@ export async function saveBook(formData: FormData) {
     status: str(formData.get('status')) === 'published' ? 'published' : 'draft',
   }
 
-  if (id) {
-    await supabase.from('books').update(row).eq('id', id)
-  } else {
-    await supabase.from('books').insert(row)
+  const { error } = id
+    ? await supabase.from('books').update(row).eq('id', id)
+    : await supabase.from('books').insert(row)
+  if (error) {
+    console.error('[admin] saveBook falhou:', error)
+    throw new Error('Não foi possível guardar o livro.')
   }
   revalidatePublic()
   revalidatePath('/admin/livros')
@@ -146,10 +150,12 @@ export async function saveEvent(formData: FormData) {
     status: str(formData.get('status')) === 'published' ? 'published' : 'draft',
   }
 
-  if (id) {
-    await supabase.from('events').update(row).eq('id', id)
-  } else {
-    await supabase.from('events').insert(row)
+  const { error } = id
+    ? await supabase.from('events').update(row).eq('id', id)
+    : await supabase.from('events').insert(row)
+  if (error) {
+    console.error('[admin] saveEvent falhou:', error)
+    throw new Error('Não foi possível guardar o evento.')
   }
   revalidatePublic()
   revalidatePath('/admin/eventos')
@@ -189,10 +195,12 @@ export async function savePost(formData: FormData) {
     status: str(formData.get('status')) === 'published' ? 'published' : 'draft',
   }
 
-  if (id) {
-    await supabase.from('blog_posts').update(row).eq('id', id)
-  } else {
-    await supabase.from('blog_posts').insert(row)
+  const { error } = id
+    ? await supabase.from('blog_posts').update(row).eq('id', id)
+    : await supabase.from('blog_posts').insert(row)
+  if (error) {
+    console.error('[admin] savePost falhou:', error)
+    throw new Error('Não foi possível guardar o artigo.')
   }
   revalidatePublic()
   revalidatePath('/admin/artigos')
@@ -216,11 +224,15 @@ export async function saveTaxonomy(formData: FormData) {
   await requireStaff()
   const supabase = await createClient()
   const nome = str(formData.get('nome'))
-  await supabase.from('taxonomies').insert({
+  const { error } = await supabase.from('taxonomies').insert({
     nome,
     slug: slugify(str(formData.get('slug')) || nome),
     tipo: str(formData.get('tipo')) || 'categoria-blog',
   })
+  if (error) {
+    console.error('[admin] saveTaxonomy falhou:', error)
+    throw new Error('Não foi possível guardar a categoria.')
+  }
   revalidatePublic()
   revalidatePath('/admin/taxonomias')
 }
@@ -241,10 +253,14 @@ export async function deleteTaxonomy(formData: FormData) {
 export async function updateContactStatus(formData: FormData) {
   await requireStaff()
   const supabase = await createClient()
-  await supabase
+  const { error } = await supabase
     .from('contact_requests')
     .update({ status: str(formData.get('status')) })
     .eq('id', str(formData.get('id')))
+  if (error) {
+    console.error('[admin] updateContactStatus falhou:', error)
+    throw new Error('Não foi possível atualizar o estado do pedido.')
+  }
   revalidatePath('/admin/pedidos')
 }
 
@@ -255,7 +271,11 @@ export async function updateUserRole(formData: FormData) {
   const id = str(formData.get('id'))
   const role = str(formData.get('role'))
 
-  await supabase.from('profiles').update({ role }).eq('id', id)
+  const { error } = await supabase.from('profiles').update({ role }).eq('id', id)
+  if (error) {
+    console.error('[admin] updateUserRole falhou:', error)
+    throw new Error('Não foi possível atualizar o papel do utilizador.')
+  }
 
   // Ao conceder "autor", cria um perfil de autor em rascunho (se ainda não existir).
   if (role === 'author') {
@@ -295,7 +315,11 @@ export async function approveSubmission(formData: FormData) {
   const table = str(formData.get('table'))
   const id = str(formData.get('id'))
   if (!['authors', 'blog_posts', 'events'].includes(table) || !id) return
-  await supabase.from(table).update({ status: 'published' }).eq('id', id)
+  const { error } = await supabase.from(table).update({ status: 'published' }).eq('id', id)
+  if (error) {
+    console.error('[admin] approveSubmission falhou:', error)
+    throw new Error('Não foi possível aprovar a submissão.')
+  }
   revalidatePublic()
   revalidatePath('/admin/aprovacoes')
 }
