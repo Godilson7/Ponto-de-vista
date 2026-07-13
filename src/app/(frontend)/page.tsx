@@ -120,6 +120,7 @@ export default async function HomePage() {
       </Section>
 
       {/* Autores em destaque */}
+      {featuredAuthors.length > 0 ? (
       <Section>
         <Reveal className="flex flex-wrap items-end justify-between gap-6">
           <SectionHeading kicker="O conselho" title="Autores em destaque" className="max-w-xl" />
@@ -143,8 +144,10 @@ export default async function HomePage() {
           ))}
         </div>
       </Section>
+      ) : null}
 
       {/* Livros em destaque */}
+      {gridBooks.length > 0 ? (
       <Section muted>
         <Reveal className="flex flex-wrap items-end justify-between gap-6">
           <SectionHeading kicker="Catálogo" title="Livros em destaque" className="max-w-xl" />
@@ -160,6 +163,7 @@ export default async function HomePage() {
           ))}
         </div>
       </Section>
+      ) : null}
 
       {/* Por que publicar connosco */}
       <Section>

@@ -39,7 +39,49 @@ export function HighlightsCarousel({ items }: { items: Highlight[] }) {
     return () => clearInterval(t)
   }, [paused, n])
 
-  if (n === 0) return null
+  // Estado vazio (sem livros/eventos/artigos ainda) — hero editorial, para a
+  // home nunca ficar "a meio".
+  if (n === 0) {
+    return (
+      <section
+        aria-label="Ponto de Vista Editora"
+        className="relative overflow-hidden border-b border-border"
+        style={{ background: BANNER_BG, color: LIGHT }}
+      >
+        <div className="mx-auto max-w-content px-6 py-20 md:py-28 lg:px-8">
+          <div className="max-w-2xl">
+            <p className="label text-gold">Publicação · Posicionamento · Autoridade</p>
+            <h1
+              className="mt-5 animate-fade-up text-display font-medium tracking-tightish"
+              style={{ color: LIGHT }}
+            >
+              Não publicamos apenas livros. Construímos autoridade.
+            </h1>
+            <span className="gold-rule mt-7" aria-hidden="true" />
+            <p
+              className="mt-7 max-w-prose animate-fade-up text-lg leading-relaxed"
+              style={{ color: 'rgba(243,238,228,0.74)' }}
+            >
+              Uma casa de autores de língua portuguesa — Portugal, Brasil e África Lusófona.
+              Damos a cada voz estrutura, permanência e alcance.
+            </p>
+            <div className="mt-9 flex flex-wrap items-center gap-4">
+              <Button asChild variant="gold" size="lg">
+                <Link href="/publicar">Publicar o meu livro</Link>
+              </Button>
+              <Link
+                href="/a-editora"
+                className="inline-flex h-12 items-center justify-center rounded-sm border px-8 text-xs font-medium uppercase tracking-[0.14em] transition-colors hover:brightness-125"
+                style={{ borderColor: 'rgba(243,238,228,0.35)', color: LIGHT }}
+              >
+                Conhecer a editora
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
   const go = (delta: number) => setIndex((p) => (p + delta + n) % n)
   const item = items[index]
   const Icon = ICONS[item.kind]
