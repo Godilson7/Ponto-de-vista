@@ -55,7 +55,11 @@ export async function saveAuthor(formData: FormData) {
 export async function deleteAuthor(formData: FormData) {
   await requireStaff()
   const supabase = await createClient()
-  await supabase.from('authors').delete().eq('id', str(formData.get('id')))
+  const { error } = await supabase.from('authors').delete().eq('id', str(formData.get('id')))
+  if (error) {
+    console.error('[admin] deleteAuthor falhou:', error)
+    throw new Error('Não foi possível eliminar o autor.')
+  }
   revalidatePublic()
   revalidatePath('/admin/autores')
 }
@@ -109,7 +113,11 @@ export async function saveBook(formData: FormData) {
 export async function deleteBook(formData: FormData) {
   await requireStaff()
   const supabase = await createClient()
-  await supabase.from('books').delete().eq('id', str(formData.get('id')))
+  const { error } = await supabase.from('books').delete().eq('id', str(formData.get('id')))
+  if (error) {
+    console.error('[admin] deleteBook falhou:', error)
+    throw new Error('Não foi possível eliminar o livro.')
+  }
   revalidatePublic()
   revalidatePath('/admin/livros')
 }
@@ -151,7 +159,11 @@ export async function saveEvent(formData: FormData) {
 export async function deleteEvent(formData: FormData) {
   await requireStaff()
   const supabase = await createClient()
-  await supabase.from('events').delete().eq('id', str(formData.get('id')))
+  const { error } = await supabase.from('events').delete().eq('id', str(formData.get('id')))
+  if (error) {
+    console.error('[admin] deleteEvent falhou:', error)
+    throw new Error('Não foi possível eliminar o evento.')
+  }
   revalidatePublic()
   revalidatePath('/admin/eventos')
 }
@@ -190,7 +202,11 @@ export async function savePost(formData: FormData) {
 export async function deletePost(formData: FormData) {
   await requireStaff()
   const supabase = await createClient()
-  await supabase.from('blog_posts').delete().eq('id', str(formData.get('id')))
+  const { error } = await supabase.from('blog_posts').delete().eq('id', str(formData.get('id')))
+  if (error) {
+    console.error('[admin] deletePost falhou:', error)
+    throw new Error('Não foi possível eliminar o artigo.')
+  }
   revalidatePublic()
   revalidatePath('/admin/artigos')
 }
@@ -212,7 +228,11 @@ export async function saveTaxonomy(formData: FormData) {
 export async function deleteTaxonomy(formData: FormData) {
   await requireStaff()
   const supabase = await createClient()
-  await supabase.from('taxonomies').delete().eq('id', str(formData.get('id')))
+  const { error } = await supabase.from('taxonomies').delete().eq('id', str(formData.get('id')))
+  if (error) {
+    console.error('[admin] deleteTaxonomy falhou:', error)
+    throw new Error('Não foi possível eliminar a categoria.')
+  }
   revalidatePublic()
   revalidatePath('/admin/taxonomias')
 }
