@@ -27,6 +27,8 @@ export type Author = {
   cidade?: string
   miniBio: string
   bioCompleta: string
+  porqueEscrevo?: string
+  emTresPalavras: string[]
   fotoUrl?: string
   galeria: string[]
   redesSociais: SocialLink[]
@@ -37,6 +39,8 @@ export type Author = {
 }
 
 export type Testimonial = { texto: string; autor: string }
+
+export type BuyLink = { loja: string; url: string }
 
 export type Formato = 'Físico' | 'Digital' | 'Ambos'
 
@@ -63,6 +67,8 @@ export type Book = {
   capaUrl?: string
   fotosLancamento: string[]
   depoimentos: Testimonial[]
+  frasesDestaque: string[]
+  linksCompra: BuyLink[]
   relacionados: string[]
   destaque?: boolean
 }
@@ -85,10 +91,10 @@ export type BlogPost = {
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 const AUTHOR_COLS =
-  'slug,nome,pais,cidade,area,areas_de_autoridade,frase_posicionamento,mini_bio,bio_completa,foto_url,video_url,redes,participacoes,galeria,destaque,whatsapp'
+  'slug,nome,pais,cidade,area,areas_de_autoridade,frase_posicionamento,mini_bio,bio_completa,porque_escrevo,em_tres_palavras,foto_url,video_url,redes,participacoes,galeria,destaque,whatsapp'
 
 const BOOK_COLS_BASE =
-  'id,slug,titulo,subtitulo,sinopse_curta,sinopse_completa,temas,categoria,pais,publico_indicado,isbn,num_paginas,formato,link_compra,capa_url,fotos_lancamento,depoimentos,relacionados,destaque,autor:authors(slug,nome)'
+  'id,slug,titulo,subtitulo,sinopse_curta,sinopse_completa,temas,categoria,pais,publico_indicado,isbn,num_paginas,formato,link_compra,links_compra,frases_destaque,capa_url,fotos_lancamento,depoimentos,relacionados,destaque,autor:authors(slug,nome)'
 
 // Com preços (migração 02). Há fallback automático para BOOK_COLS_BASE caso
 // as colunas de preço ainda não existam.
@@ -108,6 +114,8 @@ function mapAuthor(row: any): Author {
     cidade: row.cidade ?? undefined,
     miniBio: row.mini_bio ?? '',
     bioCompleta: row.bio_completa ?? '',
+    porqueEscrevo: row.porque_escrevo ?? undefined,
+    emTresPalavras: row.em_tres_palavras ?? [],
     fotoUrl: row.foto_url ?? undefined,
     galeria: row.galeria ?? [],
     redesSociais: Array.isArray(row.redes) ? row.redes : [],
@@ -143,6 +151,8 @@ function mapBook(row: any): Book {
     capaUrl: row.capa_url ?? undefined,
     fotosLancamento: row.fotos_lancamento ?? [],
     depoimentos: Array.isArray(row.depoimentos) ? row.depoimentos : [],
+    frasesDestaque: row.frases_destaque ?? [],
+    linksCompra: Array.isArray(row.links_compra) ? row.links_compra : [],
     relacionados: row.relacionados ?? [],
     destaque: row.destaque ?? false,
   }

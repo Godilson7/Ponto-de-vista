@@ -156,6 +156,15 @@ export default async function AutorPage({ params }: Params) {
               <RichText content={author.bioCompleta} />
             </CardSection>
 
+            {/* Porque escrevo */}
+            {author.porqueEscrevo ? (
+              <CardSection kicker="Motivação" title="Porque escrevo">
+                <p className="font-serif text-xl italic leading-relaxed text-ink-soft">
+                  {author.porqueEscrevo}
+                </p>
+              </CardSection>
+            ) : null}
+
             {/* Livros */}
             {books.length > 0 ? (
               <CardSection kicker="Publicações" title="Livros publicados">
@@ -272,6 +281,18 @@ export default async function AutorPage({ params }: Params) {
 
           {/* Barra lateral */}
           <aside className="space-y-8 lg:col-span-4">
+            {author.emTresPalavras.length > 0 ? (
+              <CardSection kicker="Essência" title="Em três palavras">
+                <ul className="space-y-2">
+                  {author.emTresPalavras.map((w) => (
+                    <li key={w} className="font-serif text-2xl italic text-emerald">
+                      {w}
+                    </li>
+                  ))}
+                </ul>
+              </CardSection>
+            ) : null}
+
             <CardSection kicker="Especialidade" title="Áreas de autoridade">
               <ul className="flex flex-wrap gap-2">
                 {author.areasDeAutoridade.map((a) => (

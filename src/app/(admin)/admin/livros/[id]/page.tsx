@@ -113,6 +113,17 @@ export default async function AdminLivroForm({ params }: Params) {
         <Field label="Depoimentos (JSON)" htmlFor="dep" className="sm:col-span-2" hint='Ex.: [{"texto":"…","autor":"…"}]'>
           <Textarea id="dep" name="depoimentos" defaultValue={JSON.stringify(b.depoimentos ?? [], null, 2)} />
         </Field>
+        <Field label="Frases do livro (uma por linha)" htmlFor="frases" className="sm:col-span-2">
+          <Textarea id="frases" name="frases_destaque" defaultValue={(b.frases_destaque ?? []).join('\n')} />
+        </Field>
+        <Field
+          label="Links de compra (JSON)"
+          htmlFor="linksc"
+          className="sm:col-span-2"
+          hint='Ex.: [{"loja":"Amazon","url":"https://…"},{"loja":"WOOK","url":"https://…"}]'
+        >
+          <Textarea id="linksc" name="links_compra" defaultValue={JSON.stringify(b.links_compra ?? [], null, 2)} />
+        </Field>
         <Field label="Estado" htmlFor="status">
           <Select id="status" name="status" defaultValue={b.status ?? 'draft'}>
             <option value="draft">Rascunho</option>

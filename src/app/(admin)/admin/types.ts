@@ -14,6 +14,8 @@ export type AdminAuthorRow = {
   frase_posicionamento?: string
   mini_bio?: string
   bio_completa?: string
+  porque_escrevo?: string
+  em_tres_palavras?: string[]
   foto_url?: string
   video_url?: string
   whatsapp?: string
@@ -47,6 +49,8 @@ export type AdminBookRow = {
   fotos_lancamento?: string[]
   relacionados?: string[]
   depoimentos?: unknown
+  frases_destaque?: string[]
+  links_compra?: unknown
   destaque?: boolean
   status?: string
 }

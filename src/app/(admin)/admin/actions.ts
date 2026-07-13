@@ -32,6 +32,8 @@ export async function saveAuthor(formData: FormData) {
     frase_posicionamento: strOrNull(formData.get('frase_posicionamento')),
     mini_bio: strOrNull(formData.get('mini_bio')),
     bio_completa: strOrNull(formData.get('bio_completa')),
+    porque_escrevo: strOrNull(formData.get('porque_escrevo')),
+    em_tres_palavras: csvToArray(formData.get('em_tres_palavras')),
     foto_url: strOrNull(formData.get('foto_url')),
     video_url: strOrNull(formData.get('video_url')),
     whatsapp: strOrNull(formData.get('whatsapp')),
@@ -98,6 +100,11 @@ export async function saveBook(formData: FormData) {
     fotos_lancamento: csvToArray(formData.get('fotos_lancamento')),
     relacionados: csvToArray(formData.get('relacionados')),
     depoimentos: parseJson(formData.get('depoimentos'), [] as unknown[]),
+    frases_destaque: str(formData.get('frases_destaque'))
+      .split(/\r?\n/)
+      .map((s) => s.trim())
+      .filter(Boolean),
+    links_compra: parseJson(formData.get('links_compra'), [] as unknown[]),
     destaque: formData.get('destaque') === 'on',
     status: str(formData.get('status')) === 'published' ? 'published' : 'draft',
   }

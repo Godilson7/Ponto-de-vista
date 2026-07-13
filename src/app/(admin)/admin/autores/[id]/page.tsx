@@ -66,6 +66,12 @@ export default async function AdminAutorForm({ params }: Params) {
         <Field label="Biografia completa (Markdown)" htmlFor="bio" className="sm:col-span-2">
           <Textarea id="bio" name="bio_completa" className="min-h-48" defaultValue={a.bio_completa ?? ''} />
         </Field>
+        <Field label="Porque escrevo" htmlFor="porque" className="sm:col-span-2">
+          <Textarea id="porque" name="porque_escrevo" defaultValue={a.porque_escrevo ?? ''} />
+        </Field>
+        <Field label="Em três palavras (separadas por vírgula)" htmlFor="tres" className="sm:col-span-2">
+          <Input id="tres" name="em_tres_palavras" defaultValue={(a.em_tres_palavras ?? []).join(', ')} />
+        </Field>
         <Field label="Foto" htmlFor="foto" className="sm:col-span-2">
           <ImageUpload name="foto_url" folder="autores" defaultValue={a.foto_url ?? ''} aspect="aspect-square" />
         </Field>

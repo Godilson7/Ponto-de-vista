@@ -163,6 +163,21 @@ export default async function LivroPage({ params }: Params) {
                 </Button>
               ) : null}
             </div>
+
+            {book.linksCompra.length > 0 ? (
+              <div className="mt-4">
+                <p className="label mb-2 text-muted">Também disponível em</p>
+                <div className="flex flex-wrap gap-2">
+                  {book.linksCompra.map((l) => (
+                    <Button key={l.url} asChild variant="outline" size="sm">
+                      <a href={l.url} target="_blank" rel="noopener noreferrer">
+                        {l.loja}
+                      </a>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            ) : null}
           </div>
         </div>
       </Section>
@@ -212,6 +227,23 @@ export default async function LivroPage({ params }: Params) {
                 </Link>
               </Button>
             </div>
+          </div>
+        </Section>
+      ) : null}
+
+      {/* Frases do livro */}
+      {book.frasesDestaque.length > 0 ? (
+        <Section>
+          <SectionHeading kicker="Do livro" title="Frases em destaque" />
+          <div className="mt-10 grid gap-8 md:grid-cols-2">
+            {book.frasesDestaque.map((f, i) => (
+              <blockquote
+                key={i}
+                className="border-l-2 border-gold pl-6 font-serif text-xl italic leading-relaxed text-ink-soft"
+              >
+                “{f}”
+              </blockquote>
+            ))}
           </div>
         </Section>
       ) : null}
