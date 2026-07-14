@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 
 import { buildMetadata } from '@/lib/seo'
 import { getAuthors, getBooks, distinct } from '@/lib/content'
-import { PageHeader } from '@/components/sections/page-header'
+import { PageHero } from '@/components/sections/page-hero'
 import { Section } from '@/components/ui/section'
 import { AuthorsExplorer } from '@/components/explorer/authors-explorer'
 
@@ -39,10 +39,12 @@ export default async function AutoresPage() {
 
   return (
     <>
-      <PageHeader
+      <PageHero
+        variant="autores"
         kicker="O conselho"
         title="Autores"
         lead="Cada autor é uma voz com área de autoridade própria. Conheça quem publica connosco."
+        cta={{ label: 'Publicar o meu livro', href: '/publicar' }}
       />
       <Section>
         <AuthorsExplorer

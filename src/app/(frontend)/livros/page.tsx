@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 
 import { buildMetadata } from '@/lib/seo'
 import { getBooks, distinct } from '@/lib/content'
-import { PageHeader } from '@/components/sections/page-header'
+import { PageHero } from '@/components/sections/page-hero'
 import { Section } from '@/components/ui/section'
 import { BooksExplorer } from '@/components/explorer/books-explorer'
 
@@ -26,10 +26,12 @@ export default async function LivrosPage() {
 
   return (
     <>
-      <PageHeader
+      <PageHero
+        variant="livros"
         kicker="Catálogo"
         title="Livros"
         lead="Obras que cruzam autoria e autoridade, da língua portuguesa para o mundo."
+        cta={{ label: 'Publicar o meu livro', href: '/publicar' }}
       />
       <Section>
         <BooksExplorer

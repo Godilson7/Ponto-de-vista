@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 
 import { buildMetadata } from '@/lib/seo'
 import { Section, SectionHeading } from '@/components/ui/section'
-import { PageHeader } from '@/components/sections/page-header'
+import { PageHero } from '@/components/sections/page-hero'
 import { ContactForm } from '@/components/forms/contact-form'
 
 export const metadata: Metadata = buildMetadata({
@@ -49,10 +49,12 @@ const steps = [
 export default function PublicarPage() {
   return (
     <>
-      <PageHeader
+      <PageHero
+        variant="publicar"
         kicker="Publicar"
         title="Publique com a Ponto de Vista Editora."
         lead="Não entregamos apenas um livro impresso — construímos a plataforma de autoridade que o sustenta. Conheça o processo e diga-nos do seu projeto."
+        cta={{ label: 'Falar do meu projeto', href: '#contacto' }}
       />
 
       {/* Processo em 6 passos */}

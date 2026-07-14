@@ -6,7 +6,7 @@ import { buildMetadata } from '@/lib/seo'
 import { Section, SectionHeading } from '@/components/ui/section'
 import { Container } from '@/components/ui/container'
 import { Button } from '@/components/ui/button'
-import { PageHeader } from '@/components/sections/page-header'
+import { PageHero } from '@/components/sections/page-hero'
 import { StatsBand, type Stat } from '@/components/sections/stats-band'
 
 export const metadata: Metadata = buildMetadata({
@@ -33,10 +33,13 @@ const stats: Stat[] = [
 export default function AEditoraPage() {
   return (
     <>
-      <PageHeader
+      <PageHero
+        variant="a-editora"
         kicker="A Casa"
         title="A Ponto de Vista Editora não publica apenas livros."
         lead="Ajudamos autores a posicionar a sua mensagem, a sua história e a sua autoridade no mundo."
+        cta={{ label: 'Publicar o meu livro', href: '/publicar' }}
+        ctaSecondary={{ label: 'Conhecer os autores', href: '/autores' }}
       />
 
       {/* História */}

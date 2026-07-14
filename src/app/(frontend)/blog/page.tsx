@@ -4,7 +4,7 @@ import type { Metadata } from 'next'
 
 import { buildMetadata } from '@/lib/seo'
 import { getPosts, getCategories, formatDatePt } from '@/lib/content'
-import { PageHeader } from '@/components/sections/page-header'
+import { PageHero } from '@/components/sections/page-hero'
 import { Section } from '@/components/ui/section'
 import { PostCard } from '@/components/cards/post-card'
 
@@ -22,10 +22,12 @@ export default async function BlogPage() {
 
   return (
     <>
-      <PageHeader
+      <PageHero
+        variant="blog"
         kicker="Ideias"
         title="Blog"
         lead="Autoria, escrita, mercado editorial e o trabalho de construir autoridade."
+        cta={{ label: 'Conhecer os autores', href: '/autores' }}
       />
 
       <Section>

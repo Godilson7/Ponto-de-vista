@@ -5,7 +5,7 @@ import { CalendarDays, ArrowUpRight } from 'lucide-react'
 
 import { buildMetadata } from '@/lib/seo'
 import { getEvents } from '@/lib/content'
-import { PageHeader } from '@/components/sections/page-header'
+import { PageHero } from '@/components/sections/page-hero'
 import { Section } from '@/components/ui/section'
 import { Button } from '@/components/ui/button'
 
@@ -23,10 +23,12 @@ export default async function EventosPage() {
 
   return (
     <>
-      <PageHeader
+      <PageHero
+        variant="eventos"
         kicker="Agenda cultural"
         title="Eventos"
         lead="Lançamentos, palestras e conversas com os autores da casa — em Portugal, no Brasil e em África Lusófona."
+        cta={{ label: 'Conhecer os autores', href: '/autores' }}
       />
       <Section>
         {events.length > 0 ? (
