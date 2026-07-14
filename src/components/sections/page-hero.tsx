@@ -1,26 +1,12 @@
 import * as React from 'react'
 import Link from 'next/link'
 import {
-  Award,
-  Book,
   BookOpen,
-  Bookmark,
   CalendarDays,
-  FileCheck,
-  FileText,
   Feather,
-  Globe,
   Landmark,
   Library,
-  MapPin,
-  Mic,
   Newspaper,
-  PenLine,
-  Quote,
-  Send,
-  Sparkles,
-  Ticket,
-  User,
   Users,
   type LucideIcon,
 } from 'lucide-react'
@@ -43,18 +29,18 @@ export type HeroVariant =
   | 'publicar'
   | 'eventos'
 
-// Identidade visual por página: ícones temáticos + tom + cor de acento.
+// Identidade visual por página: um ícone emblemático + tom + cor de acento.
 const VARIANTS: Record<
   HeroVariant,
-  { icons: LucideIcon[]; tone: 'paper' | 'dark'; accent: 'emerald' | 'gold' }
+  { icon: LucideIcon; tone: 'paper' | 'dark'; accent: 'emerald' | 'gold' }
 > = {
-  home: { icons: [BookOpen, Users, Feather, Globe, Award], tone: 'dark', accent: 'gold' },
-  'a-editora': { icons: [Landmark, Globe, Feather, BookOpen, Users], tone: 'paper', accent: 'emerald' },
-  autores: { icons: [Users, Mic, Award, PenLine, User], tone: 'paper', accent: 'emerald' },
-  livros: { icons: [BookOpen, Library, Bookmark, Feather, Book], tone: 'paper', accent: 'emerald' },
-  blog: { icons: [FileText, PenLine, Newspaper, Quote, BookOpen], tone: 'paper', accent: 'gold' },
-  publicar: { icons: [Feather, Send, Sparkles, FileCheck, Award], tone: 'dark', accent: 'gold' },
-  eventos: { icons: [CalendarDays, Mic, MapPin, Users, Ticket], tone: 'paper', accent: 'emerald' },
+  home: { icon: BookOpen, tone: 'dark', accent: 'gold' },
+  'a-editora': { icon: Landmark, tone: 'paper', accent: 'emerald' },
+  autores: { icon: Users, tone: 'paper', accent: 'emerald' },
+  livros: { icon: Library, tone: 'paper', accent: 'emerald' },
+  blog: { icon: Newspaper, tone: 'paper', accent: 'gold' },
+  publicar: { icon: Feather, tone: 'dark', accent: 'gold' },
+  eventos: { icon: CalendarDays, tone: 'paper', accent: 'emerald' },
 }
 
 export type PageHeroProps = {
@@ -66,30 +52,22 @@ export type PageHeroProps = {
   ctaSecondary?: Cta
 }
 
-// "Constelação" de ícones no painel direito — posições/dimensões/atraso.
-const SPOTS = [
-  { top: '6%', left: '38%', size: 96, delay: '0s' },
-  { top: '0%', left: '4%', size: 54, delay: '.9s' },
-  { top: '46%', left: '0%', size: 68, delay: '1.7s' },
-  { top: '55%', left: '58%', size: 60, delay: '.4s' },
-  { top: '18%', left: '78%', size: 46, delay: '1.2s' },
-]
-
 /**
- * Cabeçalho de página com CTA e painel de ícones temáticos à direita.
- * Cada `variant` traz a sua identidade (ícones, tom claro/escuro, cor de acento).
+ * Cabeçalho de página com CTA e um emblema editorial à direita — um único ícone
+ * temático numa "chapa" com filete dourado e marca-de-água subtil (sóbrio, imóvel).
+ * Cada `variant` traz a sua identidade (ícone, tom claro/escuro, cor de acento).
  */
 export function PageHero({ variant, kicker, title, lead, cta, ctaSecondary }: PageHeroProps) {
-  const { icons, tone, accent } = VARIANTS[variant]
+  const { icon: Icon, tone, accent } = VARIANTS[variant]
   const dark = tone === 'dark'
-  const tiles = icons.slice(0, SPOTS.length)
+  const iconColor = accent === 'gold' ? 'text-gold' : 'text-emerald'
 
   return (
     <section
       className={cn('relative overflow-hidden border-b border-border', !dark && 'bg-paper-card')}
       style={dark ? { background: DARK_BG, color: LIGHT } : undefined}
     >
-      <Container className="grid items-center gap-8 py-14 md:grid-cols-[1.1fr_0.9fr] md:gap-10 md:py-20">
+      <Container className="grid items-center gap-8 py-14 md:grid-cols-[1.1fr_0.9fr] md:gap-12 md:py-20">
         <div>
           {kicker ? (
             <p className={cn('label', dark ? 'text-gold' : 'text-emerald')}>{kicker}</p>
@@ -138,34 +116,36 @@ export function PageHero({ variant, kicker, title, lead, cta, ctaSecondary }: Pa
           ) : null}
         </div>
 
-        {/* Painel de ícones temáticos (decorativo) */}
-        <div className="relative hidden min-h-[280px] md:block" aria-hidden="true">
-          {tiles.map((Icon, i) => {
-            const s = SPOTS[i]
-            return (
-              <span
-                key={i}
-                className={cn(
-                  'absolute flex animate-float items-center justify-center rounded-2xl border shadow-card backdrop-blur-sm motion-reduce:animate-none',
-                  dark ? 'border-gold/25' : 'border-border',
-                )}
-                style={{
-                  top: s.top,
-                  left: s.left,
-                  width: s.size,
-                  height: s.size,
-                  animationDelay: s.delay,
-                  background: dark ? 'rgba(243,238,228,0.06)' : 'rgb(var(--paper))',
-                }}
-              >
-                <Icon
-                  className={accent === 'gold' ? 'text-gold' : 'text-emerald'}
-                  style={{ width: s.size * 0.42, height: s.size * 0.42 }}
-                  strokeWidth={1.5}
-                />
-              </span>
-            )
-          })}
+        {/* Emblema editorial — ícone único numa "chapa" com filete dourado */}
+        <div
+          className="relative hidden min-h-[260px] items-center justify-center md:flex"
+          aria-hidden="true"
+        >
+          <div
+            className="relative flex aspect-square w-full max-w-[320px] animate-fade-up items-center justify-center overflow-hidden rounded-2xl border shadow-card"
+            style={{
+              borderColor: dark ? 'rgba(200,171,104,0.30)' : 'rgba(176,147,74,0.32)',
+              background: dark ? 'rgba(243,238,228,0.04)' : 'rgb(var(--paper))',
+            }}
+          >
+            {/* filete interno */}
+            <span
+              className="absolute inset-6 rounded-xl border"
+              style={{ borderColor: dark ? 'rgba(200,171,104,0.14)' : 'rgba(21,20,15,0.07)' }}
+            />
+            {/* marca-de-água (ícone oversized, muito subtil) */}
+            <Icon
+              className={cn('absolute', iconColor)}
+              style={{ width: '98%', height: '98%', opacity: 0.05 }}
+              strokeWidth={0.6}
+            />
+            {/* ícone principal */}
+            <Icon
+              className={cn('relative', iconColor)}
+              style={{ width: '42%', height: '42%' }}
+              strokeWidth={1.1}
+            />
+          </div>
         </div>
       </Container>
     </section>
